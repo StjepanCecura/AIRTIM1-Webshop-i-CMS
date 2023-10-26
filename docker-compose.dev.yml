@@ -3,7 +3,7 @@ services:
   front-end-app:
     build: ./Frontend
     container_name: Frontend
-    ports: 
+    ports:
       - "3000:3000"
     volumes:
       - ./Frontend:/app
@@ -12,7 +12,7 @@ services:
   payment_service:
     build: ./Backend/Payment_service
     container_name: Payment_service
-    ports: 
+    ports:
       - "4000:4000"
     volumes:
       - ./Backend/Payment_service:/app
@@ -23,28 +23,28 @@ services:
       - NODE_ENV=development
     command: npm run dev
   product_service:
-    build: ./Backend/product_service
+    build: ./Backend/Product_service
     container_name: Product_service
-    ports: 
+    ports:
       - "4001:4001"
     volumes:
-      - ./Backend/product_service:/app
+      - ./Backend/Product_service:/app
       - /app/node_modules
     env_file:
-      - ./Backend/product_service/.env
+      - ./Backend/Product_service/.env
     environment:
       - NODE_ENV=development
     command: npm run dev
   user_service:
-    build: ./Backend/user_service
+    build: ./Backend/User_service
     container_name: User_service
-    ports: 
+    ports:
       - "4002:4002"
     volumes:
-      - ./Backend/user_service:/app
+      - ./Backend/User_service:/app
       - /app/node_modules
     env_file:
-      - ./Backend/user_service/.env
+      - ./Backend/User_service/.env
     environment:
       - NODE_ENV=development
     command: npm run dev
