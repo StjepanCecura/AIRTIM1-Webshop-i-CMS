@@ -3,48 +3,29 @@ services:
   front-end-app:
     build: ./Frontend
     container_name: Frontend
-    ports: 
+    ports:
       - "3000:3000"
     volumes:
       - ./Frontend:/app
       - /app/node_modules
     command: npm run serve
-  payment_service:
-    build: ./Backend/Payment_service
-    container_name: Payment_service
-    ports: 
-      - "4000:4000"
-    volumes:
-      - ./Backend/Payment_service:/app
-      - /app/node_modules
-    env_file:
-      - ./Backend/Payment_service/.env
+  kong:
+    image: kong:2.5.0-alpine
+    hostname: kong
+    container_name: kong
     environment:
-      - NODE_ENV=production
-    command: npm run start
-  product_service:
-    build: ./Backend/product_service
-    container_name: Product_service
-    ports: 
-      - "4001:4001"
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LIST: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yml"
+    command: "kong start"
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "8444:8444"
     volumes:
-      - ./Backend/product_service:/app
-      - /app/node_modules
-    env_file:
-      - ./Backend/product_service/.env
-    environment:
-      - NODE_ENV=production
-    command: npm run start
-  user_service:
-    build: ./Backend/user_service
-    container_name: User_service
-    ports: 
-      - "4002:4002"
-    volumes:
-      - ./Backend/user_service:/app
-      - /app/node_modules
-    env_file:
-      - ./Backend/user_service/.env
-    environment:
-      - NODE_ENV=production
-    command: npm run start
+      - ./Backend/Kong_service:/opt/kong

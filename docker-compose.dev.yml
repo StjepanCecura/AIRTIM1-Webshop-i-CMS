@@ -1,5 +1,14 @@
 version: "3"
 services:
+  front-end-app:
+    build: ./Frontend
+    container_name: Frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    command: npm run dev
   kong:
     image: kong:2.5.0-alpine
     hostname: kong
