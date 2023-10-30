@@ -1,0 +1,31 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: payment-service
+    host: payment_service
+    port: 4000
+    protocol: http
+    routes:
+      - name: payment-service-routes
+        paths:
+          - /payment
+        strip_path: true
+  - name: product-service
+    host: product_service
+    port: 4001
+    protocol: http
+    routes:
+      - name: product-service-routes
+        paths:
+          - /product
+        strip_path: true
+  - name: user-service
+    host: user_service
+    port: 4002
+    protocol: http
+    routes:
+      - name: user-service-routes
+        paths:
+          - /user
+        strip_path: true
