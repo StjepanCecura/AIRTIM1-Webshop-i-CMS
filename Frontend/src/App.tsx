@@ -1,9 +1,15 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import "./App.css"
+import Register from "./pages/Register"
 
 function App() {
   return (
     <>
-      <div className="flex justify-center bg-purple-100 p-10">Test</div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
