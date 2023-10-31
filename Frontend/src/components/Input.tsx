@@ -3,11 +3,12 @@ interface Props {
   placeholder: string
   onChange: (e: any) => void
   value: string
-  error?: boolean
+  errorMessage?: string
 }
 
-const Input = ({ type, placeholder, onChange, value, error }: Props) => {
-  const borderColorClass = error ? "border-red-500" : "border-tetriary"
+const Input = ({ type, placeholder, onChange, value, errorMessage }: Props) => {
+  const borderColorClass =
+    (errorMessage ?? "") == "" ? "border-tetriary" : "border-red-500"
 
   return (
     <div className="w-full">
@@ -18,6 +19,9 @@ const Input = ({ type, placeholder, onChange, value, error }: Props) => {
         type={type}
         className={`bg-tetriary w-full p-3 rounded-lg border-2 focus:border-primary focus:shadow-sm focus:shadow-gray-500 ${borderColorClass}`}
       />
+      {errorMessage ? (
+        <p className="text-sm text-red-500">{errorMessage}</p>
+      ) : null}
     </div>
   )
 }

@@ -10,8 +10,8 @@ function Register() {
     phone: "",
     password: "",
   })
-  const [passwordError, setPasswordError] = useState(false)
-  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState("")
+  const [emailError, setEmailError] = useState("")
 
   const handleChange = (
     key: keyof typeof formData,
@@ -36,14 +36,14 @@ function Register() {
     const passwordGood = checkPassword()
     const emailGood = checkEmail()
     if (!passwordGood) {
-      setPasswordError(true)
+      setPasswordError("Password has to be at least 6 characters long.")
     } else {
-      setPasswordError(false)
+      setPasswordError("")
     }
     if (!emailGood) {
-      setEmailError(true)
+      setEmailError("Enter correct email format.")
     } else {
-      setEmailError(false)
+      setEmailError("")
     }
   }
 
@@ -77,7 +77,7 @@ function Register() {
             placeholder="Email"
             onChange={(e) => handleChange("email", e.target.value)}
             value={formData.email}
-            error={emailError}
+            errorMessage={emailError}
           />
           <Input
             type="text"
@@ -90,7 +90,7 @@ function Register() {
             placeholder="Password"
             onChange={(e) => handleChange("password", e.target.value)}
             value={formData.password}
-            error={passwordError}
+            errorMessage={passwordError}
           />
           <Button text="Create account" onClick={handleRegisterClick} />
         </div>
