@@ -9,7 +9,7 @@ const Input = ({ type, placeholder }: Props) => {
       <input
         placeholder={placeholder}
         type={type}
-        className="bg-secondary w-full p-3 rounded-lg border-2 border-secondary focus:border-primary focus:shadow-sm focus:shadow-primary"
+        className="bg-tetriary w-full p-3 rounded-lg border-2 border-tetriary focus:border-primary focus:shadow-sm focus:shadow-gray-500"
       />
     </div>
   )
