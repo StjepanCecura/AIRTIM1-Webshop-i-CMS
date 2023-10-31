@@ -1,3 +1,5 @@
+import Input from "../components/Input"
+
 function Register() {
   return (
     <div className="flex flex-col md:flex-row w-full  justify-evenly h-screen items-center">
@@ -11,7 +13,13 @@ function Register() {
         </div>
       </div>
       <div className="flex-1 flex flex-col justify-center items-center">
-        Form
+        <div className="w-1/2 max-w-sm flex flex-col gap-4">
+          <Input type="text" placeholder="Name" />
+          <Input type="text" placeholder="Last name" />
+          <Input type="text" placeholder="Email" />
+          <Input type="text" placeholder="Phone" />
+          <Input type="password" placeholder="Password" />
+        </div>
       </div>
     </div>
   )
