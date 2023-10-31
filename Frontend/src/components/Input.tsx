@@ -3,9 +3,12 @@ interface Props {
   placeholder: string
   onChange: (e: any) => void
   value: string
+  error?: boolean
 }
 
-const Input = ({ type, placeholder, onChange, value }: Props) => {
+const Input = ({ type, placeholder, onChange, value, error }: Props) => {
+  const borderColorClass = error ? "border-red-500" : "border-tetriary"
+
   return (
     <div className="w-full">
       <input
@@ -13,7 +16,7 @@ const Input = ({ type, placeholder, onChange, value }: Props) => {
         value={value}
         placeholder={placeholder}
         type={type}
-        className="bg-tetriary w-full p-3 rounded-lg border-2 border-tetriary focus:border-primary focus:shadow-sm focus:shadow-gray-500"
+        className={`bg-tetriary w-full p-3 rounded-lg border-2 focus:border-primary focus:shadow-sm focus:shadow-gray-500 ${borderColorClass}`}
       />
     </div>
   )

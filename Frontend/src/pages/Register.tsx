@@ -10,6 +10,8 @@ function Register() {
     phone: "",
     password: "",
   })
+  const [passwordError, setPasswordError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
 
   const handleChange = (
     key: keyof typeof formData,
@@ -20,6 +22,31 @@ function Register() {
       [key]: value,
     })
   }
+
+  const checkPassword = () => {
+    return formData.password.length >= 6
+  }
+
+  const checkEmail = () => {
+    // TODO: use regex
+    return formData.email.includes("@")
+  }
+
+  const handleRegisterClick = () => {
+    const passwordGood = checkPassword()
+    const emailGood = checkEmail()
+    if (!passwordGood) {
+      setPasswordError(true)
+    } else {
+      setPasswordError(false)
+    }
+    if (!emailGood) {
+      setEmailError(true)
+    } else {
+      setEmailError(false)
+    }
+  }
+
   return (
     <div className="flex flex-col md:flex-row w-full justify-evenly h-screen items-center">
       <div className="text-[64px] md:flex-1  flex flex-col items-center">
@@ -50,6 +77,7 @@ function Register() {
             placeholder="Email"
             onChange={(e) => handleChange("email", e.target.value)}
             value={formData.email}
+            error={emailError}
           />
           <Input
             type="text"
@@ -62,13 +90,9 @@ function Register() {
             placeholder="Password"
             onChange={(e) => handleChange("password", e.target.value)}
             value={formData.password}
+            error={passwordError}
           />
-          <Button
-            text="Create account"
-            onClick={() => {
-              console.log("BOK -> ", formData)
-            }}
-          />
+          <Button text="Create account" onClick={handleRegisterClick} />
         </div>
       </div>
     </div>
