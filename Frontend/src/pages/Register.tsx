@@ -127,7 +127,6 @@ function Register() {
           <Button
             text="Create account"
             onClick={handleRegisterClick}
-            disabled={loadingStack.length > 0}
             loading={loadingStack.length > 0}
           />
         </div>

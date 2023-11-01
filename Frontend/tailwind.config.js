@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#5B6DF1",
-        secondary: "#6c7cf5",
-        tetriary: "#EEF2F8",
+        primary: "#5B6DF1", // Buttons, highlights
+        secondary: "#6c7cf5", // Buttons hover
+        tetriary: "#EEF2F8", // Input fields
       },
     },
   },
