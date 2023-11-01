@@ -3,12 +3,14 @@ import "./App.css"
 import Register from "./pages/Register"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import Home from "./pages/Home"
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
         </Routes>
         <ToastContainer
