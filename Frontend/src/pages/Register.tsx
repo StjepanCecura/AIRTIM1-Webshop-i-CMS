@@ -44,6 +44,9 @@ function Register() {
 
   const handleRegister = async () => {
     startLoading()
+    // Simulate delay
+    await new Promise((resolve) => setTimeout(resolve, 3000))
+    //
     await axios
       .get(`${API_URL}/user`)
       .then((res) => {
@@ -75,8 +78,6 @@ function Register() {
     }
     if (!error) handleRegister()
   }
-
-  if (loadingStack.length > 0) return null
 
   return (
     <div className="flex flex-col md:flex-row justify-evenly items-center flex-1">
@@ -123,7 +124,12 @@ function Register() {
             value={formData.password}
             errorMessage={passwordError}
           />
-          <Button text="Create account" onClick={handleRegisterClick} />
+          <Button
+            text="Create account"
+            onClick={handleRegisterClick}
+            disabled={loadingStack.length > 0}
+            loading={loadingStack.length > 0}
+          />
         </div>
       </div>
     </div>
