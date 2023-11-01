@@ -1,8 +1,11 @@
 import { useState } from "react"
 import Button from "../components/Button"
 import Input from "../components/Input"
+import axios from "axios"
+import { API_URL } from "../constants"
 
 function Register() {
+  const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -12,6 +15,14 @@ function Register() {
   })
   const [passwordError, setPasswordError] = useState("")
   const [emailError, setEmailError] = useState("")
+
+  const startLoading = () => {
+    setLoadingStack((prev) => [...prev, 1])
+  }
+
+  const stopLoading = () => {
+    setLoadingStack((prev) => prev.slice(0, -1))
+  }
 
   const handleChange = (
     key: keyof typeof formData,
@@ -31,20 +42,41 @@ function Register() {
     return /\S+@\S+\.\S+/.test(formData.email)
   }
 
+  const handleRegister = async () => {
+    startLoading()
+    await axios
+      .get(`${API_URL}/user`)
+      .then((res) => {
+        console.log("Res -> ", res)
+      })
+      .catch((err) => {
+        console.log("Register - handleRegister - error: ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const handleRegisterClick = () => {
     const passwordGood = checkPassword()
     const emailGood = checkEmail()
+    let error = false
     if (!passwordGood) {
       setPasswordError("Password has to be at least 6 characters long.")
+      error = true
     } else {
       setPasswordError("")
     }
     if (!emailGood) {
       setEmailError("Enter correct email format.")
+      error = true
     } else {
       setEmailError("")
     }
+    if (!error) handleRegister()
   }
+
+  if (loadingStack.length > 0) return null
 
   return (
     <div className="flex flex-col md:flex-row justify-evenly items-center flex-1">
