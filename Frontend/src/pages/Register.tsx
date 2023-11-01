@@ -47,7 +47,7 @@ function Register() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row w-full justify-evenly h-screen items-center">
+    <div className="flex flex-col md:flex-row justify-evenly items-center flex-1">
       <div className="text-[64px] md:flex-1  flex flex-col items-center">
         <div className="flex flex-col font-semibold tracking-wide items-center md:items-start">
           <p className="p-0 m-0">Create</p>
@@ -99,4 +99,3 @@ function Register() {
 }
 
 export default Register
-// max-w-sm
