@@ -47,15 +47,17 @@ function Register() {
 
   const handleRegister = async () => {
     startLoading()
-    // Simulate delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    //
     await axios
       .post(`${API_URL}/user`, { ...formData })
       .then((res) => {
         console.log("Register - handleRegister - res: ", res)
-        toast("Account created successfully.")
-        navigate("/")
+        if (res?.data?.error) {
+          setEmailError(res?.data?.error?.body?.message)
+          return
+        } else {
+          toast("Account created successfully.")
+          navigate("/")
+        }
       })
       .catch((err) => {
         console.log("Register - handleRegister - error: ", err)
