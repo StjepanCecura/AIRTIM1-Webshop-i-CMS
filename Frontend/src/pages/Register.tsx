@@ -4,8 +4,10 @@ import Input from "../components/Input"
 import axios from "axios"
 import { API_URL } from "../constants"
 import { toast } from "react-toastify"
+import { useNavigate } from "react-router-dom"
 
 function Register() {
+  const navigate = useNavigate()
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [formData, setFormData] = useState({
     name: "",
@@ -49,10 +51,11 @@ function Register() {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     //
     await axios
-      .get(`${API_URL}/user`)
+      .post(`${API_URL}/user`, { ...formData })
       .then((res) => {
         console.log("Register - handleRegister - res: ", res)
         toast("Account created successfully.")
+        navigate("/")
       })
       .catch((err) => {
         console.log("Register - handleRegister - error: ", err)
