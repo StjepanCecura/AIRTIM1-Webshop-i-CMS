@@ -3,6 +3,7 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import axios from "axios"
 import { API_URL } from "../constants"
+import { toast } from "react-toastify"
 
 function Register() {
   const [loadingStack, setLoadingStack] = useState<number[]>([])
@@ -45,15 +46,17 @@ function Register() {
   const handleRegister = async () => {
     startLoading()
     // Simulate delay
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     //
     await axios
       .get(`${API_URL}/user`)
       .then((res) => {
-        console.log("Res -> ", res)
+        console.log("Register - handleRegister - res: ", res)
+        toast("Account created successfully.")
       })
       .catch((err) => {
         console.log("Register - handleRegister - error: ", err)
+        toast.error("Error creating an account. Please try again later.")
       })
       .finally(() => {
         stopLoading()

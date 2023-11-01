@@ -4,7 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --c-primary: #5b6df1;
+}
+
 textarea:focus,
 input:focus {
   outline: none;
+}
+
+.Toastify__progress-bar--default {
+  background: var(--c-primary) !important;
+}
+
+.Toastify__progress-bar--success {
+  background: var(--c-primary) !important;
 }
