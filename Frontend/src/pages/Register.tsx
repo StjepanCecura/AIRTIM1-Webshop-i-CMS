@@ -28,8 +28,7 @@ function Register() {
   }
 
   const checkEmail = () => {
-    // TODO: use regex
-    return formData.email.includes("@")
+    return /\S+@\S+\.\S+/.test(formData.email)
   }
 
   const handleRegisterClick = () => {
