@@ -26,7 +26,7 @@ const Button = ({
         onClick={disabled ? () => {} : onClick}
         className={`w-full ${buttonColor} h-[50px] rounded-lg text-white font-semibold shadow-sm shadow-gray-500 text-[16px] ${buttonHoverColor} transition-colors ${buttonHoverCursor}`}
       >
-        {loading ? <Spinner /> : text}
+        {loading ? <Spinner onButton /> : text}
       </button>
     </div>
   )

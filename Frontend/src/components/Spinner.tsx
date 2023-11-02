@@ -1,19 +1,22 @@
-import { Oval } from "react-loader-spinner"
+import { TailSpin } from "react-loader-spinner"
 
-const Spinner = () => {
+interface Props {
+  onButton?: Boolean
+}
+
+const Spinner = ({ onButton = false }: Props) => {
   return (
     <div className="flex justify-center items-center">
-      <Oval
-        height={30}
-        width={30}
-        color="white"
+      <TailSpin
+        height={onButton ? "30" : "40"}
+        width={onButton ? "30" : "40"}
+        color={onButton ? "white" : "#5B6DF1"}
+        ariaLabel="tail-spin-loading"
+        radius="2"
         wrapperStyle={{}}
         wrapperClass=""
         visible={true}
-        ariaLabel="oval-loading"
-        secondaryColor="black"
-        strokeWidth={8}
-        strokeWidthSecondary={8}
+        strokeWidth={3}
       />
     </div>
   )
