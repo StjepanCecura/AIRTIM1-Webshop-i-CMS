@@ -4,6 +4,7 @@ import Register from "./pages/Register"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import Home from "./pages/Home"
+import EmailVerification from "./pages/EmailVerification"
 
 function App() {
   return (
@@ -12,6 +13,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/email-verification/:id"
+            element={<EmailVerification />}
+          />
         </Routes>
         <ToastContainer
           position="top-right"
