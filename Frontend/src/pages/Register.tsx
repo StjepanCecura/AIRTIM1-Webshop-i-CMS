@@ -45,23 +45,28 @@ function Register() {
     return /\S+@\S+\.\S+/.test(formData.email)
   }
 
+  const handleErrorWhileRegister = (error: any) => {
+    if (error.body?.errors[0]?.field == "email") {
+      setEmailError(error.body?.message)
+    } else {
+      toast.error("Error while creating an account. Please try again later.")
+    }
+  }
+
   const handleRegister = async () => {
     startLoading()
     await axios
       .post(`${API_URL}/user`, { ...formData })
       .then((res) => {
-        console.log("Register - handleRegister - res: ", res)
         if (res?.data?.error) {
-          setEmailError(res?.data?.error?.body?.message)
-          return
+          handleErrorWhileRegister(res.data.error)
         } else {
           toast("Account created successfully.")
           navigate("/")
         }
       })
       .catch((err) => {
-        console.log("Register - handleRegister - error: ", err)
-        toast.error("Error creating an account. Please try again later.")
+        toast.error("Error while creating an account. Please try again later.")
       })
       .finally(() => {
         stopLoading()
