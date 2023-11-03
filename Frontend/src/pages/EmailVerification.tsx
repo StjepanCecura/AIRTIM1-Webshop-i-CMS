@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react"
 import EmailVerifiedSVG from "../assets/email-verified.svg"
+import EmailNotVerifiedSVG from "../assets/email-not-verified.svg"
 import Button from "../components/Button"
 import { useNavigate, useParams } from "react-router-dom"
 import Spinner from "../components/Spinner"
+import { API_URL } from "../constants"
+import axios from "axios"
 
 const EmailVerification = () => {
   const navigate = useNavigate()
   const params = useParams()
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
 
   const handleHomeClick = () => {
     navigate("/")
@@ -16,9 +20,17 @@ const EmailVerification = () => {
 
   const verifyUserEmail = async (id: string) => {
     setIsLoading(true)
-    console.log("ID -> ", id)
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    setIsLoading(false)
+    await axios
+      .post(`${API_URL}/customer`, { id: id })
+      .then((res) => {
+        console.log("EmailVerification -> verifyUserEmail -> res: ", res)
+      })
+      .catch((err) => {
+        setIsError(true)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -38,8 +50,21 @@ const EmailVerification = () => {
 
   return (
     <div className="flex flex-1 justify-center items-center flex-col gap-7">
-      <img src={EmailVerifiedSVG} alt="" className="h-[10rem] ml-4" />
-      <p className="text-[36px] text-center">Email verified successfully!</p>
+      {isError ? (
+        <>
+          <img src={EmailNotVerifiedSVG} alt="" className="h-[10rem] ml-4" />
+          <p className="text-[36px] text-center">
+            Error while verifying email! Please try again later.
+          </p>
+        </>
+      ) : (
+        <>
+          <img src={EmailVerifiedSVG} alt="" className="h-[10rem] ml-4" />
+          <p className="text-[36px] text-center">
+            Email verified successfully!
+          </p>
+        </>
+      )}
       <div className="w-[300px] mt-4">
         <Button text="Home page" onClick={handleHomeClick} />
       </div>

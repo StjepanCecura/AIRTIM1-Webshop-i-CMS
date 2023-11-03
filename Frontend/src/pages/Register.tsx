@@ -56,7 +56,7 @@ function Register() {
   const handleRegister = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/user`, { ...formData })
+      .post(`${API_URL}/customer`, { ...formData })
       .then((res) => {
         if (res?.data?.error) {
           handleErrorWhileRegister(res.data.error)
