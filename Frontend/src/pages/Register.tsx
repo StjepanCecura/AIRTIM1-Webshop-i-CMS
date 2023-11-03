@@ -18,6 +18,9 @@ function Register() {
   })
   const [passwordError, setPasswordError] = useState("")
   const [emailError, setEmailError] = useState("")
+  const [nameError, setNameError] = useState("")
+  const [lastNameError, setLastNameError] = useState("")
+  const [phoneError, setPhoneError] = useState("")
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -43,6 +46,18 @@ function Register() {
 
   const checkEmail = () => {
     return /\S+@\S+\.\S+/.test(formData.email)
+  }
+
+  const checkName = () => {
+    return formData.name != ""
+  }
+
+  const checkLastName = () => {
+    return formData.lastName != ""
+  }
+
+  const checkPhone = () => {
+    return /^\d+$/.test(formData.phone) && formData.phone != ""
   }
 
   const handleErrorWhileRegister = (error: any) => {
@@ -73,9 +88,12 @@ function Register() {
       })
   }
 
-  const handleRegisterClick = () => {
+  const verifyFormData = () => {
     const passwordGood = checkPassword()
     const emailGood = checkEmail()
+    const nameGood = checkName()
+    const lastNameGood = checkLastName()
+    const phoneGood = checkPhone()
     let error = false
     if (!passwordGood) {
       setPasswordError("Password has to be at least 6 characters long.")
@@ -89,7 +107,29 @@ function Register() {
     } else {
       setEmailError("")
     }
+    if (!nameGood) {
+      setNameError("Name should not be empty.")
+      error = true
+    } else {
+      setNameError("")
+    }
+    if (!lastNameGood) {
+      setLastNameError("Last name should not be empty.")
+      error = true
+    } else {
+      setLastNameError("")
+    }
+    if (!phoneGood) {
+      setPhoneError("Enter correct phone format.")
+      error = true
+    } else {
+      setPhoneError("")
+    }
     if (!error) handleRegister()
+  }
+
+  const handleRegisterClick = () => {
+    verifyFormData()
   }
 
   return (
@@ -110,12 +150,14 @@ function Register() {
             placeholder="Name"
             onChange={(e) => handleChange("name", e.target.value)}
             value={formData.name}
+            errorMessage={nameError}
           />
           <Input
             type="text"
             placeholder="Last name"
             onChange={(e) => handleChange("lastName", e.target.value)}
             value={formData.lastName}
+            errorMessage={lastNameError}
           />
           <Input
             type="text"
@@ -129,6 +171,7 @@ function Register() {
             placeholder="Phone"
             onChange={(e) => handleChange("phone", e.target.value)}
             value={formData.phone}
+            errorMessage={phoneError}
           />
           <Input
             type="password"
