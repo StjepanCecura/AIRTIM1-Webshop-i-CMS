@@ -21,7 +21,7 @@ const EmailVerification = () => {
   const verifyUserEmail = async (id: string) => {
     setIsLoading(true)
     await axios
-      .post(`${API_URL}/customer/email-verification`, { id: id })
+      .put(`${API_URL}/customer/email-verification`, { id: id })
       .then((res) => {
         console.log("EmailVerification -> verifyUserEmail -> res: ", res)
       })
