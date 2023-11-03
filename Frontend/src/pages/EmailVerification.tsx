@@ -21,7 +21,7 @@ const EmailVerification = () => {
   const verifyUserEmail = async (id: string) => {
     setIsLoading(true)
     await axios
-      .post(`${API_URL}/customer`, { id: id })
+      .post(`${API_URL}/customer/email-verification`, { id: id })
       .then((res) => {
         console.log("EmailVerification -> verifyUserEmail -> res: ", res)
       })
@@ -38,7 +38,7 @@ const EmailVerification = () => {
       verifyUserEmail(params?.id as string)
     }
     return () => {}
-  }, [params])
+  }, [params.id])
 
   if (isLoading) {
     return (
@@ -54,7 +54,7 @@ const EmailVerification = () => {
         <>
           <img src={EmailNotVerifiedSVG} alt="" className="h-[10rem] ml-4" />
           <p className="text-[36px] text-center">
-            Error while verifying email! Please try again later.
+            Error verifying email! Please try again later.
           </p>
         </>
       ) : (
