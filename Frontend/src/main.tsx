@@ -4,9 +4,7 @@ import App from "./App.tsx"
 import "./index.css"
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <div className="min-h-screen flex flex-col ">
-      <App />
-    </div>
-  </React.StrictMode>
+  <div className="min-h-screen flex flex-col ">
+    <App />
+  </div>
 )
