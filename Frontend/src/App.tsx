@@ -6,11 +6,13 @@ import "react-toastify/dist/ReactToastify.css"
 import Home from "./pages/Home"
 import EmailVerification from "./pages/EmailVerification"
 import Login from "./pages/Login"
+import Navbar from "./layouts/Navbar"
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
