@@ -30,7 +30,9 @@ const Input = ({ type, placeholder, onChange, value, errorMessage }: Props) => {
           value={value}
           placeholder={placeholder}
           type={isPassword ? passwordState : type}
-          className={`bg-tetriary w-full p-3 pr-10 rounded-lg border-2 focus:border-primary focus:shadow-sm focus:shadow-gray-500 ${borderColorClass}`}
+          className={`bg-tetriary w-full p-3 ${
+            isPassword ? "pr-10" : ""
+          } rounded-lg border-2 focus:border-primary focus:shadow-sm focus:shadow-gray-500 ${borderColorClass}`}
         />
         {isPassword ? (
           <div
