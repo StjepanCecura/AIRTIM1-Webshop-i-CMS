@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import MenuSVG from "../assets/menu.svg"
+import ProfileSVG from "../assets/profile.svg"
 import { useState } from "react"
 
 const NavbarDesktop = () => {
@@ -11,7 +12,8 @@ const NavbarDesktop = () => {
         </Link>
         <Link to="/">Home</Link>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row items-center gap-6">
+        <img src={ProfileSVG} className="h-7" />
         <Link to="/login" className="text-primary">
           Sign In
         </Link>
@@ -33,16 +35,16 @@ const NavbarMobile = () => {
             <span className="text-primary">AiR</span>Express
           </Link>
         </div>
-        <div className="flex flex-row">
-          <div
-            className="flex flex-row items-center hover:cursor-pointer"
+        <div className="flex flex-row gap-6 items-center">
+          <img src={ProfileSVG} className="h-7" />
+          <img
+            src={MenuSVG}
+            className="h-4 hover:cursor-pointer"
             onClick={handleMenuClick}
-          >
-            <img src={MenuSVG} className="h-4" />
-          </div>
+          />
         </div>
       </div>
-      {menuOpen ? <div>Hello this is menu</div> : null}
+      {menuOpen ? <div className="bg-red-500">Hello this is menu</div> : null}
     </>
   )
 }
