@@ -45,6 +45,7 @@ function Login() {
 
   const handleErrorWhileSignIn = (error: string) => {
     setPasswordError(error)
+    setEmailError(error)
   }
 
   const handleLogin = async () => {
@@ -52,6 +53,7 @@ function Login() {
     await axios
       .post(`${API_URL}/customer/login`, { ...formData })
       .then((res) => {
+        console.log(res)
         if (res?.data?.status == 200) {
           navigate("/")
         }
