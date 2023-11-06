@@ -8,7 +8,11 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 const Profile = () => {
-  const [customer, setCustomer] = useState<Customer>({ name: "", email: "" })
+  const [customer, setCustomer] = useState<Customer>({
+    firstName: "",
+    email: "",
+    phoneNumber: "",
+  })
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const navigate = useNavigate()
 
@@ -25,18 +29,27 @@ const Profile = () => {
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
-        const name = res?.data?.userData?.firstName
+        const firstName = res?.data?.userData?.firstName
         const email = res?.data?.userData?.email
-        setCustomer({ name: name, email: email })
+        const phoneNumber = res?.data?.userData?.phoneNumber
+        setCustomer({
+          firstName: firstName,
+          email: email,
+          phoneNumber: phoneNumber,
+        })
       })
       .catch((err) => {
         console.log("ERROR -> ", err)
-        if (err?.response.status == 403) {
-          navigate("/login")
-        } else {
+        if (err?.response.status != 403) {
           toast.error("Error loading profile. Please try again later.")
-          navigate("/login")
+          navigate("/")
         }
+        // if (err?.response.status == 403) {
+        //   navigate("/login")
+        // } else {
+        //   toast.error("Error loading profile. Please try again later.")
+        //   navigate("/login")
+        // }
       })
       .finally(() => {
         stopLoading()
