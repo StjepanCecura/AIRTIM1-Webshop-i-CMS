@@ -44,11 +44,6 @@ function Login() {
     return formData.email != ""
   }
 
-  const handleErrorWhileSignIn = (error: string) => {
-    setPasswordError(error)
-    setEmailError(error)
-  }
-
   const handleLogin = async () => {
     startLoading()
     await axios
