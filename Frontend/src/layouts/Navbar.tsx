@@ -98,6 +98,7 @@ const Navbar = () => {
   const [loginStatus, setLoginStatus] = useState("")
 
   const signOut = async () => {
+    // removeLoginStatus()
     console.log("Signing out!")
   }
 

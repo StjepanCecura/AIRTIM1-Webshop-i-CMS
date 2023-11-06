@@ -73,11 +73,12 @@ function Register() {
     await axios
       .post(`${API_URL}/customer/register`, { ...formData })
       .then((res) => {
-        if (res?.data?.error) {
-          handleErrorWhileRegister(res.data.error)
-        } else {
+        if (res?.status == 200) {
           toast("Account created successfully.")
           navigate("/")
+        }
+        if (res?.data?.error) {
+          handleErrorWhileRegister(res.data.error)
         }
       })
       .catch((err) => {
