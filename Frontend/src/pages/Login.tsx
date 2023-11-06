@@ -57,12 +57,13 @@ function Login() {
         if (res?.status == 200) {
           navigate("/")
         }
-        if (res?.status == 401) {
-          handleErrorWhileSignIn(res.data.message)
-        }
       })
       .catch((err) => {
-        toast.error("Error while signing in. Please try again later.")
+        if (err?.response.status == 401) {
+          handleErrorWhileSignIn(err?.response?.data?.message)
+        } else {
+          toast.error("Error while signing in. Please try again later.")
+        }
       })
       .finally(() => {
         stopLoading()
