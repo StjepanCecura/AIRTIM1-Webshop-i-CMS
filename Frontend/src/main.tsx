@@ -23,9 +23,9 @@ axios.interceptors.response.use(
   },
   function (error) {
     // Do something with request error
-    // if (error.response.status === 403) {
-    //   window.location.href = "/login"
-    // }
+    if (error.response.status === 403) {
+      window.location.href = "/login"
+    }
     return Promise.reject(error)
   }
 )
