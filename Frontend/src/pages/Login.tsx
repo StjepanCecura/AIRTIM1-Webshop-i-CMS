@@ -54,9 +54,6 @@ function Login() {
       .post(`${API_URL}/customer/login`, { ...formData })
       .then((res) => {
         console.log(res)
-        if (res?.data?.status == 200) {
-          navigate("/")
-        }
         if (res?.data?.status == 400) {
           handleErrorWhileSignIn(res.data.message)
         }
