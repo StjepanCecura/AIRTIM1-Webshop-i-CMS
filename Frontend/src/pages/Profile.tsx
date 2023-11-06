@@ -69,7 +69,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-10">
       <p>Hello, {customer.firstName}!</p>
       <p>Email: {customer.email}</p>
       <p>Phone number: {customer.phoneNumber}</p>
