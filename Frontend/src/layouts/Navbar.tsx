@@ -4,6 +4,7 @@ import ProfileSVG from "../assets/profile.svg"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getLoginStatus } from "../services/lsLoginStatus"
+import { useLocation } from "react-router-dom"
 
 interface Props {
   loginStatus: string
@@ -93,6 +94,7 @@ const NavbarMobile = ({
 
 const Navbar = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const [loginStatus, setLoginStatus] = useState("")
 
   const signOut = async () => {
@@ -111,7 +113,7 @@ const Navbar = () => {
     const status = getLoginStatus()
     setLoginStatus(status)
     return () => {}
-  }, [])
+  }, [location])
 
   return (
     <>

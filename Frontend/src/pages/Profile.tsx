@@ -39,7 +39,6 @@ const Profile = () => {
         })
       })
       .catch((err) => {
-        console.log("ERROR -> ", err)
         if (err?.response.status != 403) {
           toast.error("Error loading profile. Please try again later.")
           navigate("/")
@@ -71,8 +70,9 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col">
-      <p>Hello, {customer.name}!</p>
+      <p>Hello, {customer.firstName}!</p>
       <p>Email: {customer.email}</p>
+      <p>Phone number: {customer.phoneNumber}</p>
     </div>
   )
 }

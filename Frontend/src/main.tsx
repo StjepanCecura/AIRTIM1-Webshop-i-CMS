@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client"
 import App from "./App.tsx"
 import "./index.css"
 import axios from "axios"
+import { removeLoginStatus } from "./services/lsLoginStatus.tsx"
 
 axios.interceptors.request.use(
   function (config) {
@@ -24,6 +25,7 @@ axios.interceptors.response.use(
   function (error) {
     // Do something with request error
     if (error.response.status === 403) {
+      removeLoginStatus()
       window.location.href = "/login"
     }
     return Promise.reject(error)
