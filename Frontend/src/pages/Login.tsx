@@ -3,6 +3,9 @@ import Button from "../components/Button"
 import Input from "../components/Input"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import axios from "axios"
+import { API_URL } from "../constants"
+import { toast } from "react-toastify"
 
 function Login() {
   const navigate = useNavigate()
@@ -40,10 +43,28 @@ function Login() {
     return formData.email != ""
   }
 
+  const handleErrorWhileSignIn = (error: string) => {
+    setPasswordError(error)
+  }
+
   const handleLogin = async () => {
     startLoading()
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    stopLoading()
+    await axios
+      .post(`${API_URL}/customer/login`, { ...formData })
+      .then((res) => {
+        if (res?.data?.status == 200) {
+          navigate("/")
+        }
+        if (res?.data?.status == 400) {
+          handleErrorWhileSignIn(res.data.message)
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while signing in. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
   }
 
   const verifyFormData = () => {
