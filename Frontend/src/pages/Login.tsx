@@ -94,7 +94,7 @@ function Login() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row justify-evenly items-center flex-1 pb-10">
+    <div className="flex flex-col md:flex-row justify-evenly items-center flex-1 pb-20">
       <div className="text-[52px] md:text-[64px] md:flex-1 flex flex-col items-center">
         <div className="flex flex-col font-semibold">
           <div className="tracking-wide">
