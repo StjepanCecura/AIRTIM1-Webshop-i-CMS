@@ -71,13 +71,14 @@ function Register() {
   const handleRegister = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/customer`, { ...formData })
+      .post(`${API_URL}/customer/register`, { ...formData })
       .then((res) => {
-        if (res?.data?.error) {
-          handleErrorWhileRegister(res.data.error)
-        } else {
+        if (res?.status == 200) {
           toast("Account created successfully.")
           navigate("/")
+        }
+        if (res?.data?.error) {
+          handleErrorWhileRegister(res.data.error)
         }
       })
       .catch((err) => {
@@ -108,13 +109,13 @@ function Register() {
       setEmailError("")
     }
     if (!nameGood) {
-      setNameError("Name should not be empty.")
+      setNameError("Name cannot be empty.")
       error = true
     } else {
       setNameError("")
     }
     if (!lastNameGood) {
-      setLastNameError("Last name should not be empty.")
+      setLastNameError("Last name cannot be empty.")
       error = true
     } else {
       setLastNameError("")
@@ -125,17 +126,18 @@ function Register() {
     } else {
       setPhoneError("")
     }
-    if (!error) handleRegister()
+    return error
   }
 
   const handleRegisterClick = () => {
-    verifyFormData()
+    const isError = verifyFormData()
+    if (!isError) handleRegister()
   }
 
   return (
-    <div className="flex flex-col md:flex-row justify-evenly items-center flex-1">
-      <div className="text-[64px] md:flex-1  flex flex-col items-center">
-        <div className="flex flex-col font-semibold tracking-wide items-center md:items-start">
+    <div className="pb-20 flex flex-col md:flex-row justify-evenly items-center flex-1">
+      <div className="text-[52px] md:text-[64px] md:flex-1  flex flex-col items-center">
+        <div className="flex flex-col font-semibold tracking-wide">
           <p className="p-0 m-0">Create</p>
           <p className="p-0 m-0">
             <span className="text-primary">AiR</span>Express

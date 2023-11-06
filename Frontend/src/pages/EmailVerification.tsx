@@ -23,9 +23,8 @@ const EmailVerification = () => {
     await axios
       .put(`${API_URL}/customer/email-verification`, { id: id })
       .then((res) => {
-        console.log("RES -> ", res)
-        if (res?.data?.isEmailVerified != true) {
-          setIsError(true)
+        if (res?.status == 200) {
+          navigate("/")
         }
       })
       .catch((err) => {
