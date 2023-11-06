@@ -5,6 +5,9 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getLoginStatus } from "../services/lsLoginStatus"
 import { useLocation } from "react-router-dom"
+import { API_URL } from "../constants"
+import axios from "axios"
+import { toast } from "react-toastify"
 
 interface Props {
   loginStatus: string
@@ -56,7 +59,7 @@ const NavbarMobile = ({
 
   return (
     <>
-      <div className="lg:hidden flex flex-row px-10 py-3">
+      <div className="lg:hidden flex flex-row px-2 py-3">
         <div className="flex flex-row flex-1 gap-6">
           <Link to="/" className="font-semibold">
             <span className="text-primary">AiR</span>Express
@@ -72,19 +75,28 @@ const NavbarMobile = ({
         </div>
       </div>
       {menuOpen ? (
-        <div className="flex flex-col">
-          <Link to="/">Home</Link>
-          {loginStatus == "true" ? (
-            <p
-              className="text-primary hover:cursor-pointer"
-              onClick={handleSignOutClick}
-            >
-              Sign Out
-            </p>
-          ) : (
-            <Link to="/login" className="text-primary">
-              Sign In
+        <div className="flex flex-col mb-4">
+          <div className="border-b-primary border">
+            <Link to="/">
+              <p className="p-2">Home</p>
             </Link>
+          </div>
+
+          {loginStatus == "true" ? (
+            <div className=" border-b-primary border">
+              <p
+                className="text-primary hover:cursor-pointer p-2"
+                onClick={handleSignOutClick}
+              >
+                Sign Out
+              </p>
+            </div>
+          ) : (
+            <div className="p-2 border-b-primary border">
+              <Link to="/login" className="text-primary">
+                Sign In
+              </Link>
+            </div>
           )}
         </div>
       ) : null}
@@ -98,8 +110,12 @@ const Navbar = () => {
   const [loginStatus, setLoginStatus] = useState("")
 
   const signOut = async () => {
-    // removeLoginStatus()
-    console.log("Signing out!")
+    await axios
+      .get(`${API_URL}/customer/sign-out`)
+      .then((res) => {})
+      .catch((err) => {
+        toast.error("Error. Please try again later.")
+      })
   }
 
   const handleProfileClick = () => {
