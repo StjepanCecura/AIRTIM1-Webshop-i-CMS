@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { API_URL } from "../constants"
 import { toast } from "react-toastify"
+import { setLoginStatus } from "../services/lsLoginStatus"
 
 function Login() {
   const navigate = useNavigate()
@@ -55,6 +56,7 @@ function Login() {
       .then((res) => {
         console.log(res)
         if (res?.status == 200) {
+          setLoginStatus(true)
           navigate("/")
         }
       })
