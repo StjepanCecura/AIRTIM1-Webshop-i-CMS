@@ -7,6 +7,7 @@ import Home from "./pages/Home"
 import EmailVerification from "./pages/EmailVerification"
 import Login from "./pages/Login"
 import Navbar from "./layouts/Navbar"
+import Profile from "./pages/Profile"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             path="/email-verification/:id"
             element={<EmailVerification />}
           />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <ToastContainer
           position="top-right"

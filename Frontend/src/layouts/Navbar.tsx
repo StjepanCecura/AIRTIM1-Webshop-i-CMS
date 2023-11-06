@@ -2,8 +2,14 @@ import { Link } from "react-router-dom"
 import MenuSVG from "../assets/menu.svg"
 import ProfileSVG from "../assets/profile.svg"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const NavbarDesktop = () => {
+  const navigate = useNavigate()
+  const handleProfileClick = () => {
+    navigate("/profile")
+  }
+
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
       <div className="flex flex-row flex-1 gap-6">
@@ -13,7 +19,7 @@ const NavbarDesktop = () => {
         <Link to="/">Home</Link>
       </div>
       <div className="flex flex-row items-center gap-6">
-        <img src={ProfileSVG} className="h-7" />
+        <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
         <Link to="/login" className="text-primary">
           Sign In
         </Link>
@@ -23,9 +29,14 @@ const NavbarDesktop = () => {
 }
 
 const NavbarMobile = () => {
+  const navigate = useNavigate()
+
   const [menuOpen, setMenuOpen] = useState(false)
   const handleMenuClick = () => {
     setMenuOpen((prevstate) => !prevstate)
+  }
+  const handleProfileClick = () => {
+    navigate("/profile")
   }
   return (
     <>
@@ -36,7 +47,7 @@ const NavbarMobile = () => {
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
-          <img src={ProfileSVG} className="h-7" />
+          <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
           <img
             src={MenuSVG}
             className="h-4 hover:cursor-pointer"
