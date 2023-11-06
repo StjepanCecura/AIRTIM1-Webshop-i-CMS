@@ -25,7 +25,9 @@ const Profile = () => {
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
-        console.log("RES -> ", res)
+        const name = res?.data?.userData?.firstName
+        const email = res?.data?.userData?.email
+        setCustomer({ name: name, email: email })
       })
       .catch((err) => {
         console.log("ERROR -> ", err)
