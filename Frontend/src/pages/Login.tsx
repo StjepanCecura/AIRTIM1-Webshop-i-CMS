@@ -62,8 +62,16 @@ function Login() {
       })
       .catch((err) => {
         if (err?.response.status == 401) {
-          handleErrorWhileSignIn(err?.response?.data?.message)
+          // Wrong credentials
+          const errorMessage = err?.response?.data?.message
+          setPasswordError(errorMessage)
+          setEmailError(errorMessage)
+        } else if (err?.response.status == 406) {
+          // Email not verified
+          const errorMessage = err?.response?.data?.message
+          setEmailError(errorMessage)
         } else {
+          // Other error
           toast.error("Error while signing in. Please try again later.")
         }
       })
