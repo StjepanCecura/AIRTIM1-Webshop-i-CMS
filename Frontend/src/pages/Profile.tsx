@@ -43,14 +43,6 @@ const Profile = () => {
       })
   }
 
-  const signOut = async () => {
-    console.log("Signing out!")
-  }
-
-  const handleSignOutClick = () => {
-    signOut()
-  }
-
   useEffect(() => {
     getCustomerData()
     return () => {}
@@ -68,7 +60,6 @@ const Profile = () => {
     <div className="flex flex-col">
       <p>Hello, {customer.name}!</p>
       <p>Email: {customer.email}</p>
-      <Button text="Sign Out" onClick={handleSignOutClick} />
     </div>
   )
 }

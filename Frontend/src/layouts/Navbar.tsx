@@ -7,15 +7,15 @@ import { getLoginStatus } from "../services/lsLoginStatus"
 
 interface Props {
   loginStatus: string
+  handleSignOutClick: () => void
+  handleProfileClick: () => void
 }
 
-const NavbarDesktop = ({ loginStatus }: Props) => {
-  const navigate = useNavigate()
-
-  const handleProfileClick = () => {
-    navigate("/profile")
-  }
-
+const NavbarDesktop = ({
+  loginStatus,
+  handleSignOutClick,
+  handleProfileClick,
+}: Props) => {
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
       <div className="flex flex-row flex-1 gap-6">
@@ -26,7 +26,14 @@ const NavbarDesktop = ({ loginStatus }: Props) => {
       </div>
       <div className="flex flex-row items-center gap-6">
         <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
-        {loginStatus == "true" ? null : (
+        {loginStatus == "true" ? (
+          <p
+            className="text-primary hover:cursor-pointer"
+            onClick={handleSignOutClick}
+          >
+            Sign Out
+          </p>
+        ) : (
           <Link to="/login" className="text-primary">
             Sign In
           </Link>
@@ -36,16 +43,16 @@ const NavbarDesktop = ({ loginStatus }: Props) => {
   )
 }
 
-const NavbarMobile = ({ loginStatus }: Props) => {
-  const navigate = useNavigate()
-
+const NavbarMobile = ({
+  loginStatus,
+  handleSignOutClick,
+  handleProfileClick,
+}: Props) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const handleMenuClick = () => {
     setMenuOpen((prevstate) => !prevstate)
   }
-  const handleProfileClick = () => {
-    navigate("/profile")
-  }
+
   return (
     <>
       <div className="lg:hidden flex flex-row px-10 py-3">
@@ -66,7 +73,14 @@ const NavbarMobile = ({ loginStatus }: Props) => {
       {menuOpen ? (
         <div className="flex flex-col">
           <Link to="/">Home</Link>
-          {loginStatus == "true" ? null : (
+          {loginStatus == "true" ? (
+            <p
+              className="text-primary hover:cursor-pointer"
+              onClick={handleSignOutClick}
+            >
+              Sign Out
+            </p>
+          ) : (
             <Link to="/login" className="text-primary">
               Sign In
             </Link>
@@ -78,17 +92,39 @@ const NavbarMobile = ({ loginStatus }: Props) => {
 }
 
 const Navbar = () => {
+  const navigate = useNavigate()
   const [loginStatus, setLoginStatus] = useState("")
+
+  const signOut = async () => {
+    console.log("Signing out!")
+  }
+
+  const handleProfileClick = () => {
+    navigate("/profile")
+  }
+
+  const handleSignOutClick = () => {
+    signOut()
+  }
+
   useEffect(() => {
     const status = getLoginStatus()
     setLoginStatus(status)
-
     return () => {}
   }, [])
+
   return (
     <>
-      <NavbarDesktop loginStatus={loginStatus} />
-      <NavbarMobile loginStatus={loginStatus} />
+      <NavbarDesktop
+        loginStatus={loginStatus}
+        handleProfileClick={handleProfileClick}
+        handleSignOutClick={handleSignOutClick}
+      />
+      <NavbarMobile
+        loginStatus={loginStatus}
+        handleProfileClick={handleProfileClick}
+        handleSignOutClick={handleSignOutClick}
+      />
     </>
   )
 }
