@@ -4,9 +4,13 @@ import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
 import Button from "../components/Button"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+
 const Profile = () => {
   const [customer, setCustomer] = useState<Customer>({ name: "", email: "" })
   const [loadingStack, setLoadingStack] = useState<number[]>([])
+  const navigate = useNavigate()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -25,6 +29,12 @@ const Profile = () => {
       })
       .catch((err) => {
         console.log("ERROR -> ", err)
+        if (err?.response.status == 403) {
+          navigate("/login")
+        } else {
+          toast.error("Error loading profile. Please try again later.")
+          navigate("/login")
+        }
       })
       .finally(() => {
         stopLoading()
