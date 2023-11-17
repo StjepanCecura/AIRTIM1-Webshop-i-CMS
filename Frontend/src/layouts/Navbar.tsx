@@ -40,7 +40,11 @@ const NavbarDesktop = ({
         })}
       </div>
       <div className="flex flex-row items-center gap-6">
-        <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
+        <img
+          src={ProfileSVG}
+          className="h-7 hover:cursor-pointer"
+          onClick={handleProfileClick}
+        />
         {loginStatus == "true" ? (
           <p
             className="text-primary hover:cursor-pointer"
@@ -82,7 +86,11 @@ const NavbarMobile = ({
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
-          <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
+          <img
+            src={ProfileSVG}
+            className="h-7 hover:cursor-pointer"
+            onClick={handleProfileClick}
+          />
           <img
             src={MenuSVG}
             className="h-4 hover:cursor-pointer"
