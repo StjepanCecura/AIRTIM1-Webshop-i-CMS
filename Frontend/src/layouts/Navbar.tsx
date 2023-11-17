@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import MenuSVG from "../assets/menu.svg"
 import ProfileSVG from "../assets/profile.svg"
+import MenuCloseSVG from "../assets/menu-close.svg"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { getLoginStatus } from "../services/lsLoginStatus"
@@ -91,11 +92,19 @@ const NavbarMobile = ({
             className="h-7 hover:cursor-pointer"
             onClick={handleProfileClick}
           />
-          <img
-            src={MenuSVG}
-            className="h-4 hover:cursor-pointer"
-            onClick={handleMenuClick}
-          />
+          {menuOpen ? (
+            <img
+              src={MenuCloseSVG}
+              className="w-5 ml-1 hover:cursor-pointer"
+              onClick={handleMenuClick}
+            />
+          ) : (
+            <img
+              src={MenuSVG}
+              className="h-4 hover:cursor-pointer"
+              onClick={handleMenuClick}
+            />
+          )}
         </div>
       </div>
       {menuOpen ? (
