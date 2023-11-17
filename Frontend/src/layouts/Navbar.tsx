@@ -13,12 +13,14 @@ interface Props {
   loginStatus: string
   handleSignOutClick: () => void
   handleProfileClick: () => void
+  handleSignInClick: () => void
 }
 
 const NavbarDesktop = ({
   loginStatus,
   handleSignOutClick,
   handleProfileClick,
+  handleSignInClick,
 }: Props) => {
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
@@ -38,9 +40,12 @@ const NavbarDesktop = ({
             Sign Out
           </p>
         ) : (
-          <Link to="/login" className="text-primary">
+          <p
+            className="text-primary hover:cursor-pointer"
+            onClick={handleSignInClick}
+          >
             Sign In
-          </Link>
+          </p>
         )}
       </div>
     </div>
@@ -51,6 +56,7 @@ const NavbarMobile = ({
   loginStatus,
   handleSignOutClick,
   handleProfileClick,
+  handleSignInClick,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const handleMenuClick = () => {
@@ -85,7 +91,7 @@ const NavbarMobile = ({
           {loginStatus == "true" ? (
             <div className=" border-b-primary border">
               <p
-                className="text-primary hover:cursor-pointer p-2"
+                className="text-primary hover:cursor-pointer p-0"
                 onClick={handleSignOutClick}
               >
                 Sign Out
@@ -93,9 +99,12 @@ const NavbarMobile = ({
             </div>
           ) : (
             <div className="p-2 border-b-primary border">
-              <Link to="/login" className="text-primary">
+              <p
+                className="text-primary hover:cursor-pointer p-0"
+                onClick={handleSignInClick}
+              >
                 Sign In
-              </Link>
+              </p>
             </div>
           )}
         </div>
@@ -128,6 +137,10 @@ const Navbar = () => {
     signOut()
   }
 
+  const handleSignInClick = () => {
+    navigate("/login")
+  }
+
   useEffect(() => {
     const status = getLoginStatus()
     setLoginStatus(status)
@@ -140,11 +153,13 @@ const Navbar = () => {
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
+        handleSignInClick={handleSignInClick}
       />
       <NavbarMobile
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
+        handleSignInClick={handleSignInClick}
       />
     </>
   )
