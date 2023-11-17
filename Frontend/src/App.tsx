@@ -8,6 +8,7 @@ import EmailVerification from "./pages/EmailVerification"
 import Login from "./pages/Login"
 import Navbar from "./layouts/Navbar"
 import Profile from "./pages/Profile"
+import DefaultPage from "./pages/DefaultPage"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/:id" element={<DefaultPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

@@ -150,6 +150,7 @@ const Navbar = () => {
   const location = useLocation()
   const [loginStatus, setLoginStatus] = useState("")
   const [routes, setRoutes] = useState([{}])
+  const [isLoading, setIsLoading] = useState(false)
 
   const signOut = async () => {
     await axios
@@ -174,7 +175,23 @@ const Navbar = () => {
     navigate("/login")
   }
 
+  const getNavigationEntries = async () => {
+    setIsLoading(true)
+    await axios
+      .get(`${API_URL}/product/getNavigationEntries`)
+      .then((res) => {
+        console.log("RES -> ", res)
+      })
+      .catch((err) => {
+        console.log("ERRRO -> ", err)
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+
   useEffect(() => {
+    getNavigationEntries()
     // TODO - get routes from contentful
     const routes = [
       {
@@ -191,6 +208,8 @@ const Navbar = () => {
     setLoginStatus(status)
     return () => {}
   }, [location])
+
+  if (isLoading) return null
 
   return (
     <>
