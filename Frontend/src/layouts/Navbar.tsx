@@ -14,6 +14,7 @@ interface Props {
   handleSignOutClick: () => void
   handleProfileClick: () => void
   handleSignInClick: () => void
+  routes: any
 }
 
 const NavbarDesktop = ({
@@ -21,6 +22,7 @@ const NavbarDesktop = ({
   handleSignOutClick,
   handleProfileClick,
   handleSignInClick,
+  routes,
 }: Props) => {
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
@@ -28,7 +30,14 @@ const NavbarDesktop = ({
         <Link to="/" className="font-semibold">
           <span className="text-primary">AiR</span>Express
         </Link>
-        <Link to="/">Home</Link>
+        {routes.map((route: { name: string; to: string }) => {
+          if ((route.name ?? "") === "") return
+          return (
+            <Link key={route.name} to={route.to}>
+              {route.name}
+            </Link>
+          )
+        })}
       </div>
       <div className="flex flex-row items-center gap-6">
         <img src={ProfileSVG} className="h-7" onClick={handleProfileClick} />
@@ -57,6 +66,7 @@ const NavbarMobile = ({
   handleSignOutClick,
   handleProfileClick,
   handleSignInClick,
+  routes,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const handleMenuClick = () => {
@@ -82,11 +92,16 @@ const NavbarMobile = ({
       </div>
       {menuOpen ? (
         <div className="flex flex-col mb-4">
-          <div className="border-b-primary border">
-            <Link to="/">
-              <p className="p-2">Home</p>
-            </Link>
-          </div>
+          {routes.map((route: { name: string; to: string }) => {
+            if ((route.name ?? "") === "") return
+            return (
+              <div key={route.name} className="border-b-primary border">
+                <Link to={route.to}>
+                  <p className="p-2">{route.name}</p>
+                </Link>
+              </div>
+            )
+          })}
 
           {loginStatus == "true" ? (
             <div className=" border-b-primary border">
@@ -117,6 +132,7 @@ const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [loginStatus, setLoginStatus] = useState("")
+  const [routes, setRoutes] = useState([{}])
 
   const signOut = async () => {
     await axios
@@ -142,6 +158,18 @@ const Navbar = () => {
   }
 
   useEffect(() => {
+    // TODO - get routes from contentful
+    const routes = [
+      {
+        name: "Home",
+        to: "/",
+      },
+    ]
+    setRoutes(routes)
+    return () => {}
+  }, [])
+
+  useEffect(() => {
     const status = getLoginStatus()
     setLoginStatus(status)
     return () => {}
@@ -154,12 +182,14 @@ const Navbar = () => {
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
+        routes={routes}
       />
       <NavbarMobile
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
+        routes={routes}
       />
     </>
   )
