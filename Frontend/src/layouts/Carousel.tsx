@@ -5,7 +5,7 @@ import { Carousel } from "react-responsive-carousel"
 const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
   console.log(carouselData)
   return (
-    <div className="flex justify-center items-center w-full py-5 md:px-60 md:py-5">
+    <div className="flex justify-center items-center w-full py-5 md:px-80 md:py-5 bg-tetriary">
       <Carousel
         autoPlay
         interval={3000}
