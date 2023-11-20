@@ -6,6 +6,7 @@ const Header = ({ headerData }: { headerData: IHeader }) => {
       {/* <div className="bg-black opacity-60 absolute inset-0 flex justify-center items-center"></div> */}
       <div className="flex-1">
         <img
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
           src={`https:${headerData?.image?.url}`}
           alt={headerData?.image?.description}
         />
