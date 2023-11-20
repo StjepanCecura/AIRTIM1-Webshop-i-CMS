@@ -18,8 +18,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/:id" element={<DefaultPage />} />
-          <Route path="/c/:id" element={<Category />} />
+          <Route path="/:slug" element={<DefaultPage />} />
+          <Route path="/c/:slug" element={<Category />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

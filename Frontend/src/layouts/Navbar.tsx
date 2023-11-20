@@ -10,6 +10,7 @@ import { API_URL } from "../constants"
 import axios from "axios"
 import { toast } from "react-toastify"
 import { Route } from "../types/route.type"
+import LogoPNG from "../assets/air-express-logo.png"
 
 interface Props {
   loginStatus: string
@@ -29,8 +30,9 @@ const NavbarDesktop = ({
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
       <div className="flex flex-row flex-1 gap-6">
-        <Link to="/" className="font-semibold">
-          <span className="text-primary">AiR</span>Express
+        <Link to="/" className="flex justify-center items-center">
+          {/* <span className="text-primary">AiR</span>Express */}
+          <img src={LogoPNG} alt="logo" width={100} />
         </Link>
         <Link to="/">Home</Link>
         {routes.map((route: Route) => {
@@ -84,8 +86,9 @@ const NavbarMobile = ({
     <>
       <div className="lg:hidden flex flex-row px-2 py-3">
         <div className="flex flex-row flex-1 gap-6">
-          <Link to="/" className="font-semibold">
-            <span className="text-primary">AiR</span>Express
+          <Link to="/" className="flex justify-center items-center">
+            {/* <span className="text-primary">AiR</span>Express */}
+            <img src={LogoPNG} alt="logo" width={100} />
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
