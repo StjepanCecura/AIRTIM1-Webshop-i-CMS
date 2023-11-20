@@ -6,7 +6,7 @@ import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
 import { IDefaultPage } from "../types/defaultPage.type"
-import Carousel from "../layouts/Carousel"
+import CarouselLayout from "../layouts/Carousel"
 
 const DefaultPage = () => {
   const { slug } = useParams()
@@ -50,7 +50,7 @@ const DefaultPage = () => {
   return (
     <div className="flex flex-col h-[calc(100vh-52px)]">
       <Header headerData={pageData?.header} />
-      <Carousel carouselData={pageData?.carousel} />
+      <CarouselLayout carouselData={pageData?.carousel} />
       <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
       <div className="flex flex-1 flex-col justify-center items-center">
         <p>Product list</p>
