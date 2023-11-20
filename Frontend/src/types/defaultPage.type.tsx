@@ -1,14 +1,15 @@
-import { Header } from "./header.type"
-import { Carousel } from "./carousel.type"
-import { Footer } from "./footer.type"
+import { IHeader } from "./header.type"
+import { ICarousel } from "./carousel.type"
+import { IFooter } from "./footer.type"
 
-export interface DefaultPage {
+export interface IDefaultPage {
   title: string
   slug: string
-  header: Header
+  header: IHeader
   type: "tag" | "category"
   tag: string | "none"
-  carousel: Carousel
+  category: string
+  carousel: ICarousel
   description: string
-  footer: Footer
+  footer: IFooter
 }

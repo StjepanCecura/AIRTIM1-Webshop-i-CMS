@@ -1,4 +1,4 @@
-export interface Carousel {
+export interface ICarousel {
   images: [
     {
       title: string

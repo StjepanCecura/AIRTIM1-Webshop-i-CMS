@@ -1,4 +1,4 @@
-export interface Header {
+export interface IHeader {
   title: string
   image: {
     title: string

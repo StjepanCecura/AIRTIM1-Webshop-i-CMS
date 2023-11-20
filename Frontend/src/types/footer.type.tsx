@@ -1,4 +1,4 @@
-export interface Footer {
+export interface IFooter {
   email: string
   phoneNumber: string
   longText: string
