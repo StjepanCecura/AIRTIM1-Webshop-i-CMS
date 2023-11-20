@@ -5,17 +5,20 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
+import { IDefaultPage } from "../types/defaultPage.type"
+import Carousel from "../layouts/Carousel"
 
 const DefaultPage = () => {
   const { slug } = useParams()
   const [isLoading, setIsLoading] = useState(false)
+  const [pageData, setPageData] = useState<IDefaultPage>()
 
   const getPageBySlug = async () => {
     setIsLoading(true)
     await axios
       .get(`${API_URL}/product/getPage?slug=${slug}`)
       .then((res) => {
-        console.log("RES PAGE-> ", res)
+        setPageData(res.data)
       })
       .catch((err) => {
         console.log("ERROR PAGE -> ", err)
@@ -37,13 +40,22 @@ const DefaultPage = () => {
       </div>
     )
 
+  if ((pageData ?? "") == "")
+    return (
+      <div className="flex flex-1 justify-center items-center">
+        <Spinner />
+      </div>
+    )
+
   return (
     <div className="flex flex-col h-[calc(100vh-52px)]">
-      <Header />
+      <Header headerData={pageData?.header} />
+      <Carousel carouselData={pageData?.carousel} />
+      <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
       <div className="flex flex-1 flex-col justify-center items-center">
-        <p>Some content</p>
+        <p>Product list</p>
       </div>
-      <Footer />
+      <Footer footerData={pageData?.footer} />
     </div>
   )
 }
