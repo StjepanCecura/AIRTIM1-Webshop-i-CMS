@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom"
 import { API_URL } from "../constants"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { Route } from "../types/route.type"
 
 interface Props {
   loginStatus: string
@@ -31,11 +32,12 @@ const NavbarDesktop = ({
         <Link to="/" className="font-semibold">
           <span className="text-primary">AiR</span>Express
         </Link>
-        {routes.map((route: { name: string; to: string }) => {
-          if ((route.name ?? "") === "") return
+        <Link to="/">Home</Link>
+        {routes.map((route: Route) => {
+          if ((route.title ?? "") === "") return
           return (
-            <Link key={route.name} to={route.to}>
-              {route.name}
+            <Link key={route.title} to={route.slug}>
+              {route.title}
             </Link>
           )
         })}
@@ -109,12 +111,17 @@ const NavbarMobile = ({
       </div>
       {menuOpen ? (
         <div className="flex flex-col mb-4">
-          {routes.map((route: { name: string; to: string }) => {
-            if ((route.name ?? "") === "") return
+          <div className="border-b-primary border">
+            <Link to="/">
+              <p className="p-2">Home</p>
+            </Link>
+          </div>
+          {routes.map((route: Route) => {
+            if ((route.title ?? "") === "") return
             return (
-              <div key={route.name} className="border-b-primary border">
-                <Link to={route.to}>
-                  <p className="p-2">{route.name}</p>
+              <div key={route.title} className="border-b-primary border">
+                <Link to={route.slug}>
+                  <p className="p-2">{route.title}</p>
                 </Link>
               </div>
             )
@@ -180,10 +187,20 @@ const Navbar = () => {
     await axios
       .get(`${API_URL}/product/getNavigationEntries`)
       .then((res) => {
-        console.log("RES -> ", res)
+        const routesFromContentful = res.data.map((route: Route) => {
+          let modifiedSlug = ""
+          if (route.type === "tag") modifiedSlug = `/${route.slug}`
+          if (route.type === "category") modifiedSlug = `/c/${route.slug}`
+          if (route.type === "none") modifiedSlug = `/${route.slug}`
+          return {
+            title: route.title,
+            slug: modifiedSlug,
+          }
+        })
+        setRoutes(routesFromContentful)
       })
       .catch((err) => {
-        console.log("ERRRO -> ", err)
+        console.log("ERROR -> ", err)
       })
       .finally(() => {
         setIsLoading(false)
@@ -192,14 +209,6 @@ const Navbar = () => {
 
   useEffect(() => {
     getNavigationEntries()
-    // TODO - get routes from contentful
-    const routes = [
-      {
-        name: "Home",
-        to: "/",
-      },
-    ]
-    setRoutes(routes)
     return () => {}
   }, [])
 
