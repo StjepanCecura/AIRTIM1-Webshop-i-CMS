@@ -14,9 +14,11 @@ const Header = ({ headerData }: { headerData: IHeader }) => {
         <h1 className=" text-white font-bold text-[48px] md:text-[64px] ">
           {headerData?.title}
         </h1>
-        <p className="text-white text-center text-[18px]">
-          {headerData?.description}
-        </p>
+        {headerData?.description ? (
+          <p className="text-white text-center text-[18px]">
+            {headerData?.description}
+          </p>
+        ) : null}
       </div>
     </div>
   )
