@@ -53,9 +53,12 @@ const DefaultPage = () => {
       {pageData?.carousel ? (
         <CarouselLayout carouselData={pageData?.carousel} />
       ) : null}
-      <div className="flex justify-center items-center w-full px-8 md:px-52 py-8">
-        <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
-      </div>
+      {pageData?.description ? (
+        <div className="flex justify-center items-center w-full px-8 md:px-52 py-8">
+          <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
+        </div>
+      ) : null}
+
       {/* productsList */}
       <div className="bg-tetriary py-8 flex justify-center items-center">
         PRODUCTS LIST SOON...

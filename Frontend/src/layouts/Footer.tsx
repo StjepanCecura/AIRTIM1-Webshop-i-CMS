@@ -8,10 +8,13 @@ const Footer = ({ footerData }: { footerData: IFooter }) => {
         src={`https:${footerData?.image?.url}`}
         alt={footerData?.image?.description}
       />
-      <div
-        className="text-center w-[700px] pb-5"
-        dangerouslySetInnerHTML={{ __html: footerData?.longText }}
-      />
+      {footerData?.longText ? (
+        <div
+          className="text-center w-[700px] pb-5"
+          dangerouslySetInnerHTML={{ __html: footerData?.longText }}
+        />
+      ) : null}
+
       <div className="flex flex-col gap-2 justify-center items-center">
         <p>
           <a href={`mailto:${footerData?.email}`}>{footerData?.email}</a>
