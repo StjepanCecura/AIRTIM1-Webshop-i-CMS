@@ -51,8 +51,10 @@ const DefaultPage = () => {
     <div className="flex flex-col h-[calc(100vh-52px)]">
       <Header headerData={pageData?.header} />
       <CarouselLayout carouselData={pageData?.carousel} />
-      <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
-      <div className="flex flex-1 flex-col justify-center items-center">
+      <div className="flex justify-center items-center w-full px-8 md:px-52 my-5">
+        <div dangerouslySetInnerHTML={{ __html: pageData?.description }} />
+      </div>
+      <div className="flex flex-1 flex-col justify-center items-center bg-tetriary">
         <p>Product list</p>
       </div>
       <Footer footerData={pageData?.footer} />
