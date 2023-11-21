@@ -33,7 +33,7 @@ axios.interceptors.response.use(
 )
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <div className="min-h-screen flex flex-col ">
+  <div className="min-h-screen flex flex-col">
     <App />
   </div>
 )
