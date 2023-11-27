@@ -4,18 +4,18 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
-import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
 import ProductsList from "../layouts/ProductsList"
+import { IHomePage } from "../interfaces/homePage.interface"
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [pageData, setPageData] = useState<IDefaultPage>()
+  const [pageData, setPageData] = useState<IHomePage>()
 
   const getPageBySlug = async () => {
     setIsLoading(true)
     await axios
-      .get(`${API_URL}/product/getPage?slug=home`)
+      .get(`${API_URL}/product/getHomePage`)
       .then((res) => {
         setPageData(res.data)
       })
@@ -58,15 +58,13 @@ const Home = () => {
         </div>
       ) : null}
 
-      {/* newReleases */}
       <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-        <p className="text-[36px] font-semibold">New Releases</p>
-        <ProductsList />
+        {/* <p className="text-[36px] font-semibold">{pageData.products1Title}</p> */}
+        {/* <ProductsList productsArray={pageData.products1}/> */}
       </div>
-      {/* Popular */}
       <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-        <p className="text-[36px] font-semibold">Popular</p>
-        <ProductsList />
+        {/* <p className="text-[36px] font-semibold">{pageData.products2Title}</p> */}
+        {/* <ProductsList productsArray={pageData.products2}/> */}
       </div>
       <Footer footerData={pageData?.footer} />
     </div>
