@@ -1,0 +1,17 @@
+version: "3"
+services:
+  front-end-app:
+    build: ./Frontend
+    container_name: Frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    networks:
+      - network
+    command: npm run dev
+networks:
+  network:
+    driver: bridge
+    name: api_network
