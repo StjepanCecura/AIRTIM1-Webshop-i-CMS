@@ -10,7 +10,7 @@ const Footer = ({ footerData }: { footerData: IFooter }) => {
       />
       {footerData?.longText ? (
         <div
-          className="text-center w-[700px] pb-5"
+          className="text-center max-w-[700px] pb-5"
           dangerouslySetInnerHTML={{ __html: footerData?.longText }}
         />
       ) : null}
