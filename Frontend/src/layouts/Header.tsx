@@ -1,4 +1,4 @@
-import { IHeader } from "../types/header.type"
+import { IHeader } from "../interfaces/header.interface"
 
 const Header = ({ headerData }: { headerData: IHeader }) => {
   return (

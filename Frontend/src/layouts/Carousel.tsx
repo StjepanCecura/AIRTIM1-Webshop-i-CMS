@@ -1,4 +1,4 @@
-import { ICarousel } from "../types/carousel.type"
+import { ICarousel } from "../interfaces/carousel.interface"
 import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loader
 import { Carousel } from "react-responsive-carousel"
 

@@ -1,4 +1,4 @@
-import { IFooter } from "../types/footer.type"
+import { IFooter } from "../interfaces/footer.interface"
 
 const Footer = ({ footerData }: { footerData: IFooter }) => {
   return (

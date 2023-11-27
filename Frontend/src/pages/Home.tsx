@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
-import { IDefaultPage } from "../types/defaultPage.type"
+import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
 
 const Home = () => {
