@@ -1,8 +1,16 @@
 import { IProduct } from "../interfaces/product.interface"
+import { useNavigate } from "react-router-dom"
 
 const ProductCard = ({ productData }: { productData: IProduct }) => {
+  const navigate = useNavigate()
+  const handleProductClick = () => {
+    navigate(`/p/${productData.productKey}/${productData.variantKey}`)
+  }
   return (
-    <div className="flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white">
+    <div
+      onClick={handleProductClick}
+      className="flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white"
+    >
       <div className="">
         <img className="h-[300px]" src={productData.images[0].url} />
       </div>

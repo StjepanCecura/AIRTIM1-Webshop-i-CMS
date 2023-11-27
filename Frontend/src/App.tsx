@@ -9,6 +9,7 @@ import Login from "./pages/Login"
 import Navbar from "./layouts/Navbar"
 import Profile from "./pages/Profile"
 import DefaultPage from "./pages/DefaultPage"
+import Product from "./pages/Product"
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/:slug" element={<DefaultPage />} />
           <Route path="/c/:slug" element={<DefaultPage />} />
+          <Route path="/p/:productKey/:productVariant" element={<Product />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
