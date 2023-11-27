@@ -57,9 +57,13 @@ const Home = () => {
         </div>
       ) : null}
 
-      {/* productsList */}
+      {/* newReleases */}
       <div className="bg-tetriary py-8 flex justify-center items-center">
-        PRODUCTS LIST SOON...
+        NEW RELEASES LIST SOON...
+      </div>
+      {/* Popular */}
+      <div className="bg-white py-8 flex justify-center items-center">
+        POPULAR PRODUCTS LIST SOON...
       </div>
       <Footer footerData={pageData?.footer} />
     </div>
