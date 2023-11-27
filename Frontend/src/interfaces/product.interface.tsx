@@ -1,10 +1,16 @@
 export interface IProduct {
-  title: string
-  slug: string
-  price: string
-  image: {
-    title: string
-    description: string
-    url: string
-  }
+  name: string
+  productKey: string
+  variantKey: string
+  regularPrice: number
+  discountPrice: number
+  images: [
+    {
+      dimensions: {
+        h: number
+        w: number
+      }
+      url: string
+    }
+  ]
 }
