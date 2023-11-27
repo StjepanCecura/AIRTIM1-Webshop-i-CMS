@@ -3,7 +3,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css" // requires a loa
 import { Carousel } from "react-responsive-carousel"
 
 const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
-  console.log(carouselData)
   return (
     <div className="flex justify-center items-center w-full py-8 md:px-80 md:py-8 bg-tetriary">
       <Carousel

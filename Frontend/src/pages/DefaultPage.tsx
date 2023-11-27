@@ -7,6 +7,7 @@ import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
 import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
+import ProductsList from "../layouts/ProductsList"
 
 const DefaultPage = () => {
   const { slug } = useParams()
@@ -61,7 +62,7 @@ const DefaultPage = () => {
 
       {/* productsList */}
       <div className="bg-tetriary py-8 flex justify-center items-center">
-        PRODUCTS LIST SOON...
+        <ProductsList />
       </div>
       <Footer footerData={pageData?.footer} />
     </div>
