@@ -8,7 +8,7 @@ export interface IDefaultPage {
   slug: string
   header: IHeader
   type: "none" | "category"
-  products: [IProduct]
+  category: string
   carousel: ICarousel
   description: string
   footer: IFooter

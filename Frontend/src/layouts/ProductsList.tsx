@@ -1,3 +1,4 @@
+import { useState } from "react"
 import ProductCard from "../components/ProductCard"
 import { IProduct } from "../interfaces/product.interface"
 
@@ -6,7 +7,15 @@ const ProductsList = ({
 }: {
   productsArray: Array<IProduct>
 }) => {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const [paginatedProductsArray, setPaginatedProductsArray] = useState()
+
+  // useEffect(() => {
+
+  //   return () => {
+
+  //   }
+  // }, [])
+
   return (
     <div className="w-full h-full px-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
       {productsArray.map((item, index) => {

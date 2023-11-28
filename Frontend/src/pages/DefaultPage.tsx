@@ -8,11 +8,13 @@ import Spinner from "../components/Spinner"
 import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
 import ProductsList from "../layouts/ProductsList"
+import { IProduct } from "../interfaces/product.interface"
 
 const DefaultPage = () => {
   const { slug } = useParams()
   const [isLoading, setIsLoading] = useState(false)
   const [pageData, setPageData] = useState<IDefaultPage>()
+  const [products, setProducts] = useState<Array<IProduct>>()
 
   const getPageBySlug = async () => {
     setIsLoading(true)
@@ -29,10 +31,31 @@ const DefaultPage = () => {
       })
   }
 
+  const getProductsByCategoryId = async (categoryId: string) => {
+    await axios
+      .get(`${API_URL}/product/getProductsByCategory?categoryId=${categoryId}`)
+      .then((res) => {
+        setProducts(res.data.products)
+      })
+      .catch((err) => {
+        console.log("ERROR PAGE -> ", err)
+      })
+  }
+
   useEffect(() => {
     if (slug != "") getPageBySlug()
     return () => {}
   }, [slug])
+
+  useEffect(() => {
+    if ((pageData ?? "") != "") {
+      if (pageData.category) {
+        getProductsByCategoryId(pageData.category)
+      }
+    }
+
+    return () => {}
+  }, [pageData])
 
   if (isLoading)
     return (
@@ -61,9 +84,9 @@ const DefaultPage = () => {
       ) : null}
 
       {/* productsList */}
-      {pageData?.products ? (
+      {products ? (
         <div className="bg-tetriary py-8 flex justify-center items-center">
-          <ProductsList productsArray={pageData?.products} />
+          <ProductsList productsArray={products} />
         </div>
       ) : null}
 

@@ -4,6 +4,12 @@ export interface IProduct {
   variantKey: string
   regularPrice: number
   discountPrice: number
+  categories: [
+    {
+      typeId: string
+      id: string
+    }
+  ]
   images: [
     {
       dimensions: {

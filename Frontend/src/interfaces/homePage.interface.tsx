@@ -7,10 +7,8 @@ export interface IHomePage {
   title: string
   slug: string
   header: IHeader
-  products1Title: string
-  products1: [IProduct]
-  products2Title: string
-  products2: [IProduct]
+  category1: string
+  category2: string
   carousel: ICarousel
   description: string
   footer: IFooter

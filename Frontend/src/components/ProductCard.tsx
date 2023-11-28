@@ -11,8 +11,8 @@ const ProductCard = ({ productData }: { productData: IProduct }) => {
       onClick={handleProductClick}
       className="flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white"
     >
-      <div className="">
-        <img className="h-[300px]" src={productData.images[0].url} />
+      <div className="h-[300px] flex justify-center items-center">
+        <img src={productData.images[0].url} />
       </div>
       <div className="flex flex-col justify-center items-center pb-4">
         <p className="text-[18px]">{productData.name}</p>
