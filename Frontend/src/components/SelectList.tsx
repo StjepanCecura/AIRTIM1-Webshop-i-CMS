@@ -2,6 +2,17 @@ import { useState } from "react"
 import Select from "react-select"
 import { ISelect } from "../interfaces/select.interface"
 
+const colourStyles = {
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    // const color = chroma(data.color);
+    return {
+      ...styles,
+      backgroundColor: isFocused ? "#5B6DF1" : null,
+      color: isFocused ? "#ffffff" : "#000000",
+    }
+  },
+}
+
 const SelectList = ({
   options,
   placeholder,
@@ -19,6 +30,7 @@ const SelectList = ({
         options={options}
         placeholder={placeholder}
         isSearchable
+        styles={colourStyles}
       />
     </div>
   )
