@@ -3,8 +3,7 @@ import Select from "react-select"
 import { ISelect } from "../interfaces/select.interface"
 
 const colourStyles = {
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    // const color = chroma(data.color);
+  option: (styles, { isFocused }) => {
     return {
       ...styles,
       backgroundColor: isFocused ? "#5B6DF1" : null,
@@ -16,11 +15,15 @@ const colourStyles = {
 const SelectList = ({
   options,
   placeholder,
+  selectedOption,
+  setSelectedOption,
 }: {
   options: Array<ISelect>
   placeholder: string
+  selectedOption: ISelect
+  setSelectedOption: (selectedOption: ISelect | null) => void
 }) => {
-  const [selectedOption, setSelectedOption] = useState(null)
+  // const [selectedOption, setSelectedOption] = useState(null)
 
   return (
     <div className="flex flex-row justify-center items-center gap-2">

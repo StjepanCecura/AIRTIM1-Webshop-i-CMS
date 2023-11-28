@@ -67,7 +67,11 @@ const DefaultPage = () => {
 
       {pageData.category ? (
         <div className="bg-tetriary py-8 flex justify-center items-center">
-          <ProductsList categoryId={pageData?.category} hasTitle={false} />
+          <ProductsList
+            categoryId={pageData?.category}
+            hasTitle={false}
+            productsPerPage={12}
+          />
         </div>
       ) : null}
 
