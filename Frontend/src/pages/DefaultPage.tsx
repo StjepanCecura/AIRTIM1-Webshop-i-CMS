@@ -61,9 +61,12 @@ const DefaultPage = () => {
       ) : null}
 
       {/* productsList */}
-      <div className="bg-tetriary py-8 flex justify-center items-center">
-        <ProductsList productsArray={pageData.products} />
-      </div>
+      {pageData?.products ? (
+        <div className="bg-tetriary py-8 flex justify-center items-center">
+          <ProductsList productsArray={pageData?.products} />
+        </div>
+      ) : null}
+
       <Footer footerData={pageData?.footer} />
     </div>
   )

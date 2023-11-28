@@ -18,7 +18,9 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          {/* Page without category. Eg. Info page. */}
           <Route path="/:slug" element={<DefaultPage />} />
+          {/* Page with category. Eg. Black Friday, Sneakers page. */}
           <Route path="/c/:slug" element={<DefaultPage />} />
           <Route path="/p/:productKey/:productVariant" element={<Product />} />
           <Route path="/login" element={<Login />} />
