@@ -102,14 +102,22 @@ const Home = () => {
 
       {products1 ? (
         <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-          <p className="text-[36px] font-semibold">{products1Title}</p>
+          <div className="bg-black px-12 py-2 rounded-lg">
+            <p className="text-[36px] font-semibold text-white">
+              {products1Title}
+            </p>
+          </div>
           <ProductsList productsArray={products1} />
         </div>
       ) : null}
 
       {products2 ? (
         <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-          <p className="text-[36px] font-semibold">{products2Title}</p>
+          <div className="bg-black px-12 py-2 rounded-lg min-w-[300px]">
+            <p className="text-[36px] font-semibold text-white text-center">
+              {products2Title}
+            </p>
+          </div>
           <ProductsList productsArray={products2} />
         </div>
       ) : null}
