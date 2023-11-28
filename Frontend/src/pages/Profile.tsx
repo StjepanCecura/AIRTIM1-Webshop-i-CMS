@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Customer } from "../types/customer.type"
+import { Customer } from "../interfaces/customer.interface"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"

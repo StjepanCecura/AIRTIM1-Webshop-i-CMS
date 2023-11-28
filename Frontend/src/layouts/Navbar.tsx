@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom"
 import { API_URL } from "../constants"
 import axios from "axios"
 import { toast } from "react-toastify"
-import { Route } from "../types/route.type"
+import { IRoute } from "../interfaces/route.interface"
 import LogoPNG from "../assets/air-express-logo.png"
 
 interface Props {
@@ -35,7 +35,7 @@ const NavbarDesktop = ({
           <img src={LogoPNG} alt="logo" width={100} />
         </Link>
         <Link to="/">Home</Link>
-        {routes.map((route: Route) => {
+        {routes.map((route: IRoute) => {
           if ((route.title ?? "") === "") return
           return (
             <Link key={route.title} to={route.slug}>
@@ -119,7 +119,7 @@ const NavbarMobile = ({
               <p className="p-2">Home</p>
             </Link>
           </div>
-          {routes.map((route: Route) => {
+          {routes.map((route: IRoute) => {
             if ((route.title ?? "") === "") return
             return (
               <div key={route.title} className="border-b-primary border">
@@ -190,9 +190,8 @@ const Navbar = () => {
     await axios
       .get(`${API_URL}/product/getNavigationEntries`)
       .then((res) => {
-        const routesFromContentful = res.data.map((route: Route) => {
+        const routesFromContentful = res.data.map((route: IRoute) => {
           let modifiedSlug = ""
-          if (route.type === "tag") modifiedSlug = `/${route.slug}`
           if (route.type === "category") modifiedSlug = `/c/${route.slug}`
           if (route.type === "none") modifiedSlug = `/${route.slug}`
           return {

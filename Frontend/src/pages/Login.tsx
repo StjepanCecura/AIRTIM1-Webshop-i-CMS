@@ -49,7 +49,6 @@ function Login() {
     await axios
       .post(`${API_URL}/customer/login`, { ...formData })
       .then((res) => {
-        console.log(res)
         if (res?.status == 200) {
           setLoginStatus(true)
           navigate("/")

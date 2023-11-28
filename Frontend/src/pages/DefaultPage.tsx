@@ -5,8 +5,9 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
-import { IDefaultPage } from "../types/defaultPage.type"
+import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
+import ProductsList from "../layouts/ProductsList"
 
 const DefaultPage = () => {
   const { slug } = useParams()
@@ -60,9 +61,12 @@ const DefaultPage = () => {
       ) : null}
 
       {/* productsList */}
-      <div className="bg-tetriary py-8 flex justify-center items-center">
-        PRODUCTS LIST SOON...
-      </div>
+      {pageData?.products ? (
+        <div className="bg-tetriary py-8 flex justify-center items-center">
+          <ProductsList productsArray={pageData?.products} />
+        </div>
+      ) : null}
+
       <Footer footerData={pageData?.footer} />
     </div>
   )
