@@ -7,7 +7,9 @@ import { IPagination } from "../interfaces/pagination.interface"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
-import Filter from "./Filter"
+import Filter from "../components/SelectList"
+import CategoryFilter from "../components/SelectList"
+import SelectList from "../components/SelectList"
 
 const ProductsList = ({
   categoryId,
@@ -83,6 +85,12 @@ const ProductsList = ({
     )
   }
 
+  const options = [
+    { value: "chocolate", label: "Men" },
+    { value: "strawberry", label: "Women" },
+    { value: "all", label: "All" },
+  ]
+
   return (
     <div className="flex flex-col w-full">
       {hasTitle ? (
@@ -94,7 +102,11 @@ const ProductsList = ({
           </div>
         </div>
       ) : null}
-      <Filter />
+
+      {/* Filter */}
+      <div className="mx-8 py-4 px-4 flex justify-end items-center gap-8 mb-8 bg-white">
+        <SelectList options={options} placeholder="Gender" />
+      </div>
 
       <div className="w-full h-full px-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((item, index) => {
