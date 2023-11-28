@@ -13,6 +13,7 @@ import { IProduct } from "../interfaces/product.interface"
 const DefaultPage = () => {
   const { slug } = useParams()
   const [isLoading, setIsLoading] = useState(false)
+  const [isProductsLoading, setIsProductsLoading] = useState(false)
   const [pageData, setPageData] = useState<IDefaultPage>()
   const [products, setProducts] = useState<Array<IProduct>>()
 
@@ -32,6 +33,7 @@ const DefaultPage = () => {
   }
 
   const getProductsByCategoryId = async (categoryId: string) => {
+    setIsProductsLoading(true)
     await axios
       .get(`${API_URL}/product/getProductsByCategory?categoryId=${categoryId}`)
       .then((res) => {
@@ -39,6 +41,9 @@ const DefaultPage = () => {
       })
       .catch((err) => {
         console.log("ERROR PAGE -> ", err)
+      })
+      .finally(() => {
+        setIsProductsLoading(false)
       })
   }
 
@@ -83,12 +88,20 @@ const DefaultPage = () => {
         </div>
       ) : null}
 
-      {/* productsList */}
-      {products ? (
-        <div className="bg-tetriary py-8 flex justify-center items-center">
-          <ProductsList productsArray={products} />
+      {isProductsLoading ? (
+        <div className="flex-col justify-center items-center py-[200px]">
+          <Spinner />
         </div>
-      ) : null}
+      ) : (
+        <>
+          {products ? (
+            <div className="bg-tetriary py-8 flex justify-center items-center">
+              <ProductsList productsArray={products} />
+            </div>
+          ) : null}
+        </>
+      )}
+      {/* productsList */}
 
       <Footer footerData={pageData?.footer} />
     </div>
