@@ -9,13 +9,12 @@ import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
 import ProductsList from "../layouts/ProductsList"
 import { IProduct } from "../interfaces/product.interface"
+import { IPagination } from "../interfaces/pagination.interface"
 
 const DefaultPage = () => {
   const { slug } = useParams()
   const [isLoading, setIsLoading] = useState(false)
-  const [isProductsLoading, setIsProductsLoading] = useState(false)
   const [pageData, setPageData] = useState<IDefaultPage>()
-  const [products, setProducts] = useState<Array<IProduct>>()
 
   const getPageBySlug = async () => {
     setIsLoading(true)
@@ -32,35 +31,13 @@ const DefaultPage = () => {
       })
   }
 
-  const getProductsByCategoryId = async (categoryId: string) => {
-    setIsProductsLoading(true)
-    await axios
-      .get(`${API_URL}/product/getProductsByCategory?categoryId=${categoryId}`)
-      .then((res) => {
-        setProducts(res.data.products)
-      })
-      .catch((err) => {
-        console.log("ERROR PAGE -> ", err)
-      })
-      .finally(() => {
-        setIsProductsLoading(false)
-      })
-  }
-
   useEffect(() => {
-    if (slug != "") getPageBySlug()
-    return () => {}
-  }, [slug])
-
-  useEffect(() => {
-    if ((pageData ?? "") != "") {
-      if (pageData.category) {
-        getProductsByCategoryId(pageData.category)
-      }
+    if (slug != "") {
+      getPageBySlug()
     }
 
     return () => {}
-  }, [pageData])
+  }, [slug])
 
   if (isLoading)
     return (
@@ -88,20 +65,11 @@ const DefaultPage = () => {
         </div>
       ) : null}
 
-      {isProductsLoading ? (
-        <div className="flex-col justify-center items-center py-[200px]">
-          <Spinner />
+      {pageData.category ? (
+        <div className="bg-tetriary py-8 flex justify-center items-center">
+          <ProductsList categoryId={pageData?.category} hasTitle={false} />
         </div>
-      ) : (
-        <>
-          {products ? (
-            <div className="bg-tetriary py-8 flex justify-center items-center">
-              <ProductsList productsArray={products} />
-            </div>
-          ) : null}
-        </>
-      )}
-      {/* productsList */}
+      ) : null}
 
       <Footer footerData={pageData?.footer} />
     </div>
