@@ -7,6 +7,7 @@ import { IPagination } from "../interfaces/pagination.interface"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
+import Filter from "./Filter"
 
 const ProductsList = ({
   categoryId,
@@ -48,7 +49,6 @@ const ProductsList = ({
     await axios
       .get(GET_URL)
       .then((res) => {
-        console.log("RES -> ", res.data)
         setPagination(res.data.pagination)
         setProducts(res.data.products)
         setProductsTitle(res.data.categoryName)
@@ -94,13 +94,14 @@ const ProductsList = ({
           </div>
         </div>
       ) : null}
+      <Filter />
 
       <div className="w-full h-full px-8 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((item, index) => {
           return <ProductCard key={index} productData={item} />
         })}
       </div>
-      <div className="flex flex-row justify-end items-center px-8 py-4 gap-4">
+      <div className="flex flex-row justify-center items-center px-8 py-4 gap-4 mt-4">
         <img
           onClick={handleReduceOffset}
           src={ArrowLeftSVG}
