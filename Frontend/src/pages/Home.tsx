@@ -58,21 +58,23 @@ const Home = () => {
         </div>
       ) : null}
 
-      {pageData?.products1 ? (
+      {pageData.category1 ? (
         <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-          <p className="text-[36px] font-semibold">
-            {pageData?.products1Title}
-          </p>
-          <ProductsList productsArray={pageData?.products1} />
+          <ProductsList
+            categoryId={pageData.category1}
+            hasTitle
+            productsPerPage={8}
+          />
         </div>
       ) : null}
 
-      {pageData?.products2 ? (
+      {pageData.category2 ? (
         <div className="bg-tetriary py-8 flex flex-col justify-center items-center gap-8">
-          <p className="text-[36px] font-semibold">
-            {pageData?.products2Title}
-          </p>
-          <ProductsList productsArray={pageData?.products2} />
+          <ProductsList
+            categoryId={pageData.category2}
+            hasTitle
+            productsPerPage={8}
+          />
         </div>
       ) : null}
 

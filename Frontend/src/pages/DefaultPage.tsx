@@ -8,6 +8,8 @@ import Spinner from "../components/Spinner"
 import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
 import ProductsList from "../layouts/ProductsList"
+import { IProduct } from "../interfaces/product.interface"
+import { IPagination } from "../interfaces/pagination.interface"
 
 const DefaultPage = () => {
   const { slug } = useParams()
@@ -30,7 +32,10 @@ const DefaultPage = () => {
   }
 
   useEffect(() => {
-    if (slug != "") getPageBySlug()
+    if (slug != "") {
+      getPageBySlug()
+    }
+
     return () => {}
   }, [slug])
 
@@ -60,10 +65,13 @@ const DefaultPage = () => {
         </div>
       ) : null}
 
-      {/* productsList */}
-      {pageData?.products ? (
+      {pageData.category ? (
         <div className="bg-tetriary py-8 flex justify-center items-center">
-          <ProductsList productsArray={pageData?.products} />
+          <ProductsList
+            categoryId={pageData?.category}
+            hasTitle={false}
+            productsPerPage={12}
+          />
         </div>
       ) : null}
 
