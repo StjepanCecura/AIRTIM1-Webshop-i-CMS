@@ -50,7 +50,11 @@ const Home = () => {
     <div className="flex flex-col h-[calc(100vh-52px)]">
       <Header headerData={pageData?.header} />
       {pageData?.carousel ? (
-        <CarouselLayout carouselData={pageData?.carousel} />
+        <div className="flex justify-center items-center py-8 bg-tetriary">
+          <div className="w-[80%] max-w-[1200px]">
+            <CarouselLayout carouselData={pageData?.carousel} />
+          </div>
+        </div>
       ) : null}
       {pageData?.description ? (
         <div className="flex justify-center items-center w-full px-8 md:px-52 py-8">

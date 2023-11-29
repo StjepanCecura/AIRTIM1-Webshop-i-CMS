@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel"
 
 const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
   return (
-    <div className="flex justify-center items-center w-full py-8 md:px-80 md:py-8 bg-tetriary">
+    <div>
       <Carousel
         autoPlay
         interval={3000}
@@ -15,8 +15,12 @@ const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
       >
         {carouselData.images.map((image) => {
           return (
-            <div key={image.url}>
-              <img src={`https:${image.url}`} />
+            <div key={image.url} className="max-h-[600px]">
+              {/* <img src={`https:${image.url}`} /> */}
+              <img
+                className="max-h-[600px] object-contain"
+                src={`${image.url}`}
+              />
               <p className="legend">{image.title}</p>
             </div>
           )
@@ -27,3 +31,5 @@ const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
 }
 
 export default CarouselLayout
+
+// className="flex justify-center items-center w-full py-8 md:px-80 md:py-8 bg-tetriary"
