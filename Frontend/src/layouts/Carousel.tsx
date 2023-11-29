@@ -16,11 +16,14 @@ const CarouselLayout = ({ carouselData }: { carouselData: ICarousel }) => {
         {carouselData.images.map((image) => {
           return (
             <div key={image.url} className="max-h-[600px]">
-              {/* <img src={`https:${image.url}`} /> */}
               <img
                 className="max-h-[600px] object-contain"
-                src={`${image.url}`}
+                src={`https:${image.url}`}
               />
+              {/* <img
+                className="max-h-[600px] object-contain"
+                src={`${image.url}`}
+              /> */}
               <p className="legend">{image.title}</p>
             </div>
           )
