@@ -22,7 +22,7 @@ function App() {
           <Route path="/:slug" element={<DefaultPage />} />
           {/* Page with category. Eg. Black Friday, Sneakers page. */}
           <Route path="/c/:slug" element={<DefaultPage />} />
-          <Route path="/p/:productKey/:productVariant" element={<Product />} />
+          <Route path="/p/:productKey/:variantKey" element={<Product />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
