@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
 import MenuSVG from "../assets/menu.svg"
 import ProfileSVG from "../assets/profile.svg"
+import CartSVG from "../assets/shopping-cart.svg"
+import CartActiveSVG from "../assets/shopping-cart-active.svg"
 import MenuCloseSVG from "../assets/menu-close.svg"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -45,6 +47,16 @@ const NavbarDesktop = ({
         })}
       </div>
       <div className="flex flex-row items-center gap-6">
+        <img
+          src={CartSVG}
+          className="h-6 hover:cursor-pointer"
+          onClick={() => {}}
+        />
+        {/* <img
+          src={CartActiveSVG}
+          className="h-6 hover:cursor-pointer"
+          onClick={() => {}}
+        /> */}
         <img
           src={ProfileSVG}
           className="h-7 hover:cursor-pointer"
@@ -92,6 +104,11 @@ const NavbarMobile = ({
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
+          <img
+            src={CartSVG}
+            className="h-6 hover:cursor-pointer"
+            onClick={() => {}}
+          />
           <img
             src={ProfileSVG}
             className="h-7 hover:cursor-pointer"
