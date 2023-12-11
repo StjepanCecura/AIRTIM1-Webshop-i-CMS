@@ -9,6 +9,8 @@ import Footer from "../layouts/Footer"
 import Spinner from "../components/Spinner"
 import Button from "../components/Button"
 import { IProductDetails } from "../interfaces/productDetails.interface"
+import { getShoppingCart, setShoppingCartId } from "../services/lsShoppingCart"
+
 const Product = () => {
   const { productKey, variantKey } = useParams()
   const [pageData, setPageData] = useState<IHomePage>()
@@ -54,7 +56,7 @@ const Product = () => {
       )
       .then((res) => {
         setProductData(res.data)
-        console.log("RES -> ", res.data)
+        // console.log("RES -> ", res.data)
         setCurrentVariantStock(res.data.currentVariant.availability.quantity)
         setCurrentSize("")
         setProductQuantity(1)
@@ -86,7 +88,7 @@ const Product = () => {
     }
   }
 
-  const handleAddToCartClick = () => {
+  const getProductDetails = () => {
     let productId = productData?.id
     let quantity = productQuantity
     let variantId
@@ -100,6 +102,19 @@ const Product = () => {
         variantId = variantFound.id
       }
     }
+    return { productId, variantId, quantity }
+  }
+
+  const handleAddToCartClick = async () => {
+    const { productId, variantId, quantity } = getProductDetails()
+
+    if (getShoppingCart() == null) {
+      // cart is not created yet
+      setShoppingCartId("1234565")
+    }
+
+    const cartId = getShoppingCart()
+    console.log("CART -> ", cartId)
 
     alert(
       "ID -> " +
