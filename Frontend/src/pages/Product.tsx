@@ -10,6 +10,8 @@ import Spinner from "../components/Spinner"
 import Button from "../components/Button"
 import { IProductDetails } from "../interfaces/productDetails.interface"
 import { getShoppingCart, setShoppingCartId } from "../services/lsShoppingCart"
+import { useContext } from "react"
+import { CartContext } from "../services/CartContext"
 
 const Product = () => {
   const { productKey, variantKey } = useParams()
@@ -19,6 +21,8 @@ const Product = () => {
   const [currentSize, setCurrentSize] = useState("")
   const [productQuantity, setProductQuantity] = useState(1)
   const [currentVariantStock, setCurrentVariantStock] = useState<number>()
+
+  const { setCardContextId } = useContext(CartContext)
 
   const navigate = useNavigate()
 
@@ -105,25 +109,48 @@ const Product = () => {
     return { productId, variantId, quantity }
   }
 
+  const createShoppingCart = async () => {
+    startLoading()
+    const cartId = await axios
+      .post(`${API_URL}/product/createCart`)
+      .then((res) => {
+        if (res?.status == 200) {
+          return res?.data?.cartId ?? ""
+        }
+        if (res?.data?.error) {
+          console.log("createShoppingCart ERROR 1 -> ", res?.data?.error)
+        }
+      })
+      .catch((err) => {
+        console.log("createShoppingCart ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return cartId
+  }
+
   const handleAddToCartClick = async () => {
     const { productId, variantId, quantity } = getProductDetails()
 
     if (getShoppingCart() == null) {
-      // cart is not created yet
-      setShoppingCartId("1234565")
+      // cart is not created yet inside LS
+      const cartIdFromCommercetools = await createShoppingCart()
+      // set shopping cart id inside LS
+      setShoppingCartId(cartIdFromCommercetools)
     }
+    const cartIdFromLS = getShoppingCart()
+    // Update card context so that Navbar can update UI
+    setCardContextId(cartIdFromLS)
 
-    const cartId = getShoppingCart()
-    console.log("CART -> ", cartId)
-
-    alert(
-      "ID -> " +
-        productId +
-        ", Variant ID -> " +
-        variantId +
-        ", Quantity -> " +
-        quantity
-    )
+    // alert(
+    //   "ID -> " +
+    //     productId +
+    //     ", Variant ID -> " +
+    //     variantId +
+    //     ", Quantity -> " +
+    //     quantity
+    // )
   }
 
   const handleVariantSizeClick = (_variantSize: string) => {
