@@ -279,12 +279,20 @@ const Product = () => {
                   currentSize != "" ? "hover:cursor-pointer" : ""
                 }`}
               >
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   -
                 </p>
               </div>
               <div className="px-4 py-1 bg-tetriary">
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   {productQuantity}
                 </p>
               </div>
@@ -295,7 +303,11 @@ const Product = () => {
                   currentSize != "" ? "hover:cursor-pointer" : ""
                 }`}
               >
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   +
                 </p>
               </div>
