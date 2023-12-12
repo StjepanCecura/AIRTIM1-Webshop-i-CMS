@@ -12,6 +12,7 @@ import { IProductDetails } from "../interfaces/productDetails.interface"
 import { getShoppingCart, setShoppingCartId } from "../services/lsShoppingCart"
 import { useContext } from "react"
 import { CartContext } from "../services/CartContext"
+import { getLoginStatus } from "../services/lsLoginStatus"
 
 const Product = () => {
   const { productKey, variantKey } = useParams()
@@ -22,7 +23,7 @@ const Product = () => {
   const [productQuantity, setProductQuantity] = useState(1)
   const [currentVariantStock, setCurrentVariantStock] = useState<number>()
 
-  const { setCardContextId } = useContext(CartContext)
+  const { setCardContextState } = useContext(CartContext)
 
   const navigate = useNavigate()
 
@@ -133,15 +134,23 @@ const Product = () => {
   const handleAddToCartClick = async () => {
     const { productId, variantId, quantity } = getProductDetails()
 
-    if (getShoppingCart() == null) {
-      // cart is not created yet inside LS
-      const cartIdFromCommercetools = await createShoppingCart()
-      // set shopping cart id inside LS
-      setShoppingCartId(cartIdFromCommercetools)
+    const loginStatus = getLoginStatus()
+    if (loginStatus == null) {
+      // User is not logged in
+      const cartIdFromLS = getShoppingCart()
+      if (cartIdFromLS == null || cartIdFromLS == "") {
+        // Create new cart and store it into LS
+        const cartIdFromCommercetools = await createShoppingCart()
+        setShoppingCartId(cartIdFromCommercetools)
+        //TODO: update cart by cart id (add productId, variantId and quntity)
+      } else {
+        //TODO: update cart by cartIdFromLS (add productId, variantId and quntity)
+      }
     }
-    const cartIdFromLS = getShoppingCart()
-    // Update card context so that Navbar can update UI
-    setCardContextId(cartIdFromLS)
+    if (loginStatus == "true") {
+      //TODO: update cart by user (add productId, variantId and quntity)
+    }
+    setCardContextState(true)
 
     // alert(
     //   "ID -> " +

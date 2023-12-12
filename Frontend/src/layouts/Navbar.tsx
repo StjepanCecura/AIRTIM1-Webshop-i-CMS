@@ -199,7 +199,8 @@ const Navbar = () => {
   const [routes, setRoutes] = useState([{}])
   const [isLoading, setIsLoading] = useState(false)
   const [cartExists, setCartExists] = useState(false)
-  const { cart } = useContext(CartContext)
+
+  const { cartContextState } = useContext(CartContext)
 
   const signOut = async () => {
     await axios
@@ -253,11 +254,24 @@ const Navbar = () => {
   }
 
   const checkShoppingCart = () => {
-    const id = getShoppingCart()
-    if ((id ?? "") != "") {
-      // Cart exists
-      setCartExists(true)
+    if (loginStatus == null) {
+      // User is not logged in, check cart in LS
+      const cartFromLS = getShoppingCart()
+      if (cartFromLS != null) {
+        //TODO: fetch data by cartID and check if cart is empty or not
+        //TODO: color cart based on previous line
+      }
     }
+    if (loginStatus == "true") {
+      // User is logged in, get cart for user
+      //TODO: get cart by user and check if it's empty or not
+      //TODO: color cart based on previous line
+    }
+    // const id = getShoppingCart()
+    // if ((id ?? "") != "") {
+    //   // Cart exists
+    //   setCartExists(true)
+    // }
   }
 
   useEffect(() => {
@@ -267,18 +281,16 @@ const Navbar = () => {
 
   useEffect(() => {
     checkShoppingCart()
-
     return () => {}
-  }, [])
+  }, [loginStatus])
 
   useEffect(() => {
-    if ((cart ?? "") != "") {
-      // Cart exists
-      setCartExists(true)
+    if ((cartContextState ?? "") != "") {
+      // Exists but can be true or false
+      setCartExists(cartContextState)
     }
-
     return () => {}
-  }, [cart])
+  }, [cartContextState])
 
   useEffect(() => {
     const status = getLoginStatus()

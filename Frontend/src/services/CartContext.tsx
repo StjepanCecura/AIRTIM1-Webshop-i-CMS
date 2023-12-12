@@ -4,14 +4,14 @@ import { createContext, useState } from "react"
 const CartContext = createContext(null)
 
 const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState("")
+  const [cartContextState, setCartContext] = useState(false)
 
-  const setCardContextId = (id: string) => {
-    setCart(id)
+  const setCardContextState = (state: boolean) => {
+    setCartContext(state)
   }
 
   return (
-    <CartContext.Provider value={{ cart, setCardContextId }}>
+    <CartContext.Provider value={{ cartContextState, setCardContextState }}>
       {children}
     </CartContext.Provider>
   )
