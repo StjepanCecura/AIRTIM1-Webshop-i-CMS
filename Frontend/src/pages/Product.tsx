@@ -13,6 +13,7 @@ import { getShoppingCart, setShoppingCartId } from "../services/lsShoppingCart"
 import { useContext } from "react"
 import { CartContext } from "../services/CartContext"
 import { getLoginStatus } from "../services/lsLoginStatus"
+import { toast } from "react-toastify"
 
 const Product = () => {
   const { productKey, variantKey } = useParams()
@@ -131,8 +132,42 @@ const Product = () => {
     return cartId
   }
 
+  const updateCartByCartId = async (
+    cartId: string,
+    productId: string,
+    variantId: string,
+    quantity: number
+  ) => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/product/addProductToCart`, {
+        cartId: cartId,
+        productId: productId,
+        variantId: variantId,
+        quantity: quantity,
+      })
+      .then((res) => {
+        if (res?.status == 200) {
+          console.log("RES 3 -> ", res)
+          toast("Added to cart.")
+        }
+        if (res?.data?.error) {
+          console.log("updateCartByCartId ERROR 1 -> ", res?.data?.error)
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        console.log("updateCartByCartId ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const handleAddToCartClick = async () => {
     const { productId, variantId, quantity } = getProductDetails()
+
+    // console.log("" + productId + " " + variantId + " " + quantity)
 
     const loginStatus = getLoginStatus()
     if (loginStatus == null) {
@@ -142,24 +177,23 @@ const Product = () => {
         // Create new cart and store it into LS
         const cartIdFromCommercetools = await createShoppingCart()
         setShoppingCartId(cartIdFromCommercetools)
-        //TODO: update cart by cart id (add productId, variantId and quntity)
+        // Update cart by cartIdFromCommercetools
+        updateCartByCartId(
+          cartIdFromCommercetools,
+          productId,
+          variantId,
+          quantity
+        )
       } else {
-        //TODO: update cart by cartIdFromLS (add productId, variantId and quntity)
+        // Update cart by cartIdFromLS (add productId, variantId and quntity)
+        updateCartByCartId(cartIdFromLS, productId, variantId, quantity)
       }
     }
     if (loginStatus == "true") {
       //TODO: update cart by user (add productId, variantId and quntity)
     }
+    // Turn on colored cart icon
     setCardContextState(true)
-
-    // alert(
-    //   "ID -> " +
-    //     productId +
-    //     ", Variant ID -> " +
-    //     variantId +
-    //     ", Quantity -> " +
-    //     quantity
-    // )
   }
 
   const handleVariantSizeClick = (_variantSize: string) => {

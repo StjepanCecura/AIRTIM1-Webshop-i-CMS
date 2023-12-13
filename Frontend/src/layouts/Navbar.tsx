@@ -258,14 +258,14 @@ const Navbar = () => {
       // User is not logged in, check cart in LS
       const cartFromLS = getShoppingCart()
       if (cartFromLS != null) {
-        //TODO: fetch data by cartID and check if cart is empty or not
-        //TODO: color cart based on previous line
+        //TODO: fetch data by cartFromLS and check if cart is empty or not
+        //TODO: color cart based on previous line (cartExists)
       }
     }
     if (loginStatus == "true") {
       // User is logged in, get cart for user
       //TODO: get cart by user and check if it's empty or not
-      //TODO: color cart based on previous line
+      //TODO: color cart based on previous line (cartExists)
     }
     // const id = getShoppingCart()
     // if ((id ?? "") != "") {
