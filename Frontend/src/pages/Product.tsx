@@ -132,6 +132,31 @@ const Product = () => {
     return cartId
   }
 
+  const createCartForUser = async () => {
+    startLoading()
+    let newCartId: string | null
+    await axios
+      .post(`${API_URL}/product/createCartForUser`)
+      .then((res) => {
+        if (res?.status == 200) {
+          console.log("MADE CART FOR USER -> ", res)
+          newCartId = res?.data?.cartId
+        }
+        if (res?.data?.error) {
+          console.log("createCartForUser ERROR 1 -> ", res?.data?.error)
+          newCartId = null
+        }
+      })
+      .catch((err) => {
+        console.log("createCartForUser ERROR 2 -> ", err)
+        newCartId = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return newCartId
+  }
+
   const addToCartByCartId = async (
     cartId: string,
     cartVersion: number,
@@ -166,6 +191,29 @@ const Product = () => {
       })
   }
 
+  const getCartByUser = async () => {
+    startLoading()
+    let userCartId: string | null
+    await axios
+      .get(`${API_URL}/product/getCartByCustomerId`)
+      .then((res) => {
+        if (res?.data?.cartId === null) {
+          // User doesn't have registered cart -> make one
+          userCartId = null
+        } else {
+          userCartId = res?.data?.cartId
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        userCartId = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return userCartId
+  }
+
   const getCartVersionByCartId = async (cartId: string) => {
     startLoading()
     let version: number | null
@@ -190,8 +238,6 @@ const Product = () => {
 
   const handleAddToCartClick = async () => {
     const { productId, variantId, quantity } = getProductDetails()
-
-    // console.log("" + productId + " " + variantId + " " + quantity)
 
     const loginStatus = getLoginStatus()
     if (loginStatus == null) {
@@ -233,9 +279,38 @@ const Product = () => {
       }
     }
     if (loginStatus == "true") {
-      //TODO: update cart by user (add productId, variantId and quntity)
+      // User is logged in
+      const userCartId = await getCartByUser()
+      if (userCartId === null) {
+        let newCartId = await createCartForUser()
+        const cartVersion = await getCartVersionByCartId(newCartId)
+        if (cartVersion != null) {
+          addToCartByCartId(
+            newCartId,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      } else {
+        const cartVersion = await getCartVersionByCartId(userCartId)
+        if (cartVersion != null) {
+          addToCartByCartId(
+            userCartId,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      }
     }
-    // Turn on colored cart icon
+    // Turn on colored cart icon in navbar
     setCardContextState(true)
   }
 

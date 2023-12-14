@@ -30,7 +30,6 @@ const ShoppingCart = () => {
       .then((res) => {
         console.log("RES -> ", res)
         if (res?.data?.products.length > 0) {
-          // setCartProducts to smthn
           setCartEmpty(false)
           setCartProducts(res?.data?.products)
           setCartTotal(res?.data?.totalPrice)
@@ -46,14 +45,39 @@ const ShoppingCart = () => {
       })
   }
 
+  const createCartForUser = async () => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/product/createCartForUser`)
+      .then((res) => {
+        if (res?.status == 200) {
+          console.log("MADE CART FOR USER -> ", res)
+        }
+        if (res?.data?.error) {
+          console.log("createCartForUser ERROR 1 -> ", res?.data?.error)
+        }
+      })
+      .catch((err) => {
+        console.log("createCartForUser ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const getCartByUser = async () => {
     startLoading()
     await axios
       .get(`${API_URL}/product/getCartByCustomerId`)
       .then((res) => {
         console.log("RES USER -> ", res)
-        //TODO: fetch cart data by user
-        //TODO: if empty -> set cartEmpty to true, if not empty -> display products in cart and set cartEmpty to false
+        if (res?.data?.cartId === null) {
+          // User doesn't have registered cart -> make one
+          createCartForUser()
+          setCartEmpty(true)
+        } else {
+          getCartByCartId(res?.data?.cartId)
+        }
       })
       .catch((err) => {
         console.log("ERROR -> ", err)
@@ -80,8 +104,6 @@ const ShoppingCart = () => {
     }
     if (loginStatus == "true") {
       // User is logged in
-      //TODO: fetch cart data by user
-      //TODO: if empty -> set cartEmpty to true, if not empty -> display products in cart and set cartEmpty to false
       getCartByUser()
     }
 
