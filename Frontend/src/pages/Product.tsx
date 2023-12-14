@@ -132,7 +132,7 @@ const Product = () => {
     return cartId
   }
 
-  const updateCartByCartId = async (
+  const addToCartByCartId = async (
     cartId: string,
     cartVersion: number,
     productId: string,
@@ -154,12 +154,12 @@ const Product = () => {
           toast("Added to cart.")
         }
         if (res?.data?.error) {
-          console.log("updateCartByCartId ERROR 1 -> ", res?.data?.error)
+          console.log("addToCartByCartId ERROR 1 -> ", res?.data?.error)
           toast.error("Error while adding to cart. Please try again later.")
         }
       })
       .catch((err) => {
-        console.log("updateCartByCartId ERROR 2 -> ", err)
+        console.log("addToCartByCartId ERROR 2 -> ", err)
       })
       .finally(() => {
         stopLoading()
@@ -206,7 +206,7 @@ const Product = () => {
           cartIdFromCommercetools
         )
         if (cartVersion != null) {
-          updateCartByCartId(
+          addToCartByCartId(
             cartIdFromCommercetools,
             cartVersion,
             productId,
@@ -220,7 +220,7 @@ const Product = () => {
         // Update cart by cartIdFromLS (add productId, variantId and quntity)
         const cartVersion = await getCartVersionByCartId(cartIdFromLS)
         if (cartVersion != null) {
-          updateCartByCartId(
+          addToCartByCartId(
             cartIdFromLS,
             cartVersion,
             productId,

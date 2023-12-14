@@ -253,13 +253,29 @@ const Navbar = () => {
       })
   }
 
+  const getCartByCartId = async (cartId: string) => {
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        console.log("RES NAV -> ", res)
+        if (res?.data?.products.length > 0) {
+          setCartExists(true)
+        } else {
+          setCartExists(false)
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        setCartExists(false)
+      })
+  }
+
   const checkShoppingCart = () => {
     if (loginStatus == null) {
       // User is not logged in, check cart in LS
-      const cartFromLS = getShoppingCart()
-      if (cartFromLS != null) {
-        //TODO: fetch data by cartFromLS and check if cart is empty or not
-        //TODO: color cart based on previous line (cartExists)
+      const cartIdFromLS = getShoppingCart()
+      if (cartIdFromLS != null) {
+        getCartByCartId(cartIdFromLS)
       }
     }
     if (loginStatus == "true") {
