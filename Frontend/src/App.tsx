@@ -9,7 +9,7 @@ import Login from "./pages/Login"
 import Navbar from "./layouts/Navbar"
 import Profile from "./pages/Profile"
 import DefaultPage from "./pages/DefaultPage"
-import Category from "./pages/Category"
+import Product from "./pages/Product"
 
 function App() {
   return (
@@ -18,8 +18,11 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          {/* Page without category. Eg. Info page. */}
           <Route path="/:slug" element={<DefaultPage />} />
-          <Route path="/c/:slug" element={<Category />} />
+          {/* Page with category. Eg. Black Friday, Sneakers page. */}
+          <Route path="/c/:slug" element={<DefaultPage />} />
+          <Route path="/p/:productKey/:variantKey" element={<Product />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

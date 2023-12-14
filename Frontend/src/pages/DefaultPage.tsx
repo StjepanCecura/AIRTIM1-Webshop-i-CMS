@@ -5,8 +5,11 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
-import { IDefaultPage } from "../types/defaultPage.type"
+import { IDefaultPage } from "../interfaces/defaultPage.interface"
 import CarouselLayout from "../layouts/Carousel"
+import ProductsList from "../layouts/ProductsList"
+import { IProduct } from "../interfaces/product.interface"
+import { IPagination } from "../interfaces/pagination.interface"
 
 const DefaultPage = () => {
   const { slug } = useParams()
@@ -29,7 +32,10 @@ const DefaultPage = () => {
   }
 
   useEffect(() => {
-    if (slug != "") getPageBySlug()
+    if (slug != "") {
+      getPageBySlug()
+    }
+
     return () => {}
   }, [slug])
 
@@ -51,7 +57,11 @@ const DefaultPage = () => {
     <div className="flex flex-col h-[calc(100vh-52px)]">
       <Header headerData={pageData?.header} />
       {pageData?.carousel ? (
-        <CarouselLayout carouselData={pageData?.carousel} />
+        <div className="flex justify-center items-center py-8 bg-tetriary">
+          <div className="w-[80%] max-w-[1200px]">
+            <CarouselLayout carouselData={pageData?.carousel} />
+          </div>
+        </div>
       ) : null}
       {pageData?.description ? (
         <div className="flex justify-center items-center w-full px-8 md:px-52 py-8">
@@ -59,10 +69,16 @@ const DefaultPage = () => {
         </div>
       ) : null}
 
-      {/* productsList */}
-      <div className="bg-tetriary py-8 flex justify-center items-center">
-        PRODUCTS LIST SOON...
-      </div>
+      {pageData.category ? (
+        <div className="bg-tetriary py-8 flex justify-center items-center">
+          <ProductsList
+            categoryId={pageData?.category}
+            hasTitle={false}
+            productsPerPage={12}
+          />
+        </div>
+      ) : null}
+
       <Footer footerData={pageData?.footer} />
     </div>
   )
