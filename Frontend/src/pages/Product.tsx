@@ -134,6 +134,7 @@ const Product = () => {
 
   const updateCartByCartId = async (
     cartId: string,
+    cartVersion: number,
     productId: string,
     variantId: string,
     quantity: number
@@ -142,6 +143,7 @@ const Product = () => {
     await axios
       .post(`${API_URL}/product/addProductToCart`, {
         cartId: cartId,
+        version: cartVersion,
         productId: productId,
         variantId: variantId,
         quantity: quantity,
@@ -164,6 +166,28 @@ const Product = () => {
       })
   }
 
+  const getCartVersionByCartId = async (cartId: string) => {
+    startLoading()
+    let version: number | null
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if ((res?.data?.version ?? "") != "") {
+          version = res?.data?.version
+        } else {
+          version = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        version = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return version
+  }
+
   const handleAddToCartClick = async () => {
     const { productId, variantId, quantity } = getProductDetails()
 
@@ -178,15 +202,34 @@ const Product = () => {
         const cartIdFromCommercetools = await createShoppingCart()
         setShoppingCartId(cartIdFromCommercetools)
         // Update cart by cartIdFromCommercetools
-        updateCartByCartId(
-          cartIdFromCommercetools,
-          productId,
-          variantId,
-          quantity
+        const cartVersion = await getCartVersionByCartId(
+          cartIdFromCommercetools
         )
+        if (cartVersion != null) {
+          updateCartByCartId(
+            cartIdFromCommercetools,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
       } else {
         // Update cart by cartIdFromLS (add productId, variantId and quntity)
-        updateCartByCartId(cartIdFromLS, productId, variantId, quantity)
+        const cartVersion = await getCartVersionByCartId(cartIdFromLS)
+        if (cartVersion != null) {
+          updateCartByCartId(
+            cartIdFromLS,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
       }
     }
     if (loginStatus == "true") {
