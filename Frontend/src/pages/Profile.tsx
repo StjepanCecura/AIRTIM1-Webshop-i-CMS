@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react"
-import { Customer } from "../interfaces/customer.interface"
+import { ICustomer } from "../interfaces/customer.interface"
 import axios from "axios"
 import { API_URL } from "../constants"
 import Spinner from "../components/Spinner"
 import Button from "../components/Button"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import SelectList from "../components/SelectList"
+import { ISelect } from "../interfaces/select.interface"
+import Input from "../components/Input"
+
+const countries = [{ value: "cro", label: "Croatia" }]
 
 const Profile = () => {
-  const [customer, setCustomer] = useState<Customer>({
+  const [customer, setCustomer] = useState<ICustomer>({
     firstName: "",
     email: "",
     phoneNumber: "",
   })
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const navigate = useNavigate()
+  const [country, setCountry] = useState<ISelect>()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -69,10 +75,30 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col px-10">
-      <p>Hello, {customer.firstName}!</p>
+    <div className="flex flex-col px-10 gap-2">
+      <p>
+        Hello, <span className="capitalize">{customer.firstName}</span>!
+      </p>
       <p>Email: {customer.email}</p>
       <p>Phone number: {customer.phoneNumber}</p>
+      <div className="flex flex-row gap-1 items-center">
+        <p>Country: </p>
+        <SelectList
+          options={countries}
+          placeholder="Country"
+          setSelectedOption={setCountry}
+          selectedOption={country}
+        />
+      </div>
+      <div className="flex flex-row gap-1 items-center">
+        <p>Address: </p>
+        <Input
+          placeholder="Address"
+          onChange={() => {}}
+          type="text"
+          value="bok"
+        />
+      </div>
     </div>
   )
 }
