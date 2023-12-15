@@ -14,6 +14,8 @@ const ShoppingCart = () => {
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [cartProducts, setCartProducts] = useState<Array<ICartProduct>>()
   const [cartTotal, setCartTotal] = useState(0)
+  const [loginStatus, setLoginStatus] = useState(false)
+  const [currentCartId, setCurrentCartId] = useState("")
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -77,6 +79,7 @@ const ShoppingCart = () => {
           setCartEmpty(true)
         } else {
           getCartByCartId(res?.data?.cartId)
+          setCurrentCartId(res?.data?.cartId)
         }
       })
       .catch((err) => {
@@ -92,17 +95,21 @@ const ShoppingCart = () => {
   }
 
   useEffect(() => {
-    const loginStatus = getLoginStatus()
-    if (loginStatus == null) {
+    const loginStatusFromLS = getLoginStatus()
+    if (loginStatusFromLS == "true") setLoginStatus(true)
+    else setLoginStatus(false)
+    if (loginStatusFromLS == null) {
       // User is not logged in
       const cartIdFromLS = getShoppingCart()
       if (cartIdFromLS == null || cartIdFromLS == "") {
         setCartEmpty(true)
       } else {
         getCartByCartId(cartIdFromLS)
+        // Set state
+        setCurrentCartId(cartIdFromLS)
       }
     }
-    if (loginStatus == "true") {
+    if (loginStatusFromLS == "true") {
       // User is logged in
       getCartByUser()
     }
@@ -136,7 +143,16 @@ const ShoppingCart = () => {
       </p>
       <div className="flex flex-col gap-8 px-60 py-8">
         {cartProducts.map((product) => {
-          return <CartProduct key={product.productId} productData={product} />
+          return (
+            <CartProduct
+              key={product.productId}
+              productData={product}
+              loginStatus={loginStatus}
+              cartId={currentCartId}
+              cartTotal={cartTotal}
+              setCartTotal={setCartTotal}
+            />
+          )
         })}
       </div>
       <div className="flex flex-col justify-center px-8 pb-8">
