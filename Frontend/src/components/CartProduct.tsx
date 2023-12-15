@@ -198,15 +198,15 @@ const CartProduct = ({
   }, [])
 
   return (
-    <div className="flex flex-row gap-8 px-12">
-      <div className="flex justify-center items-center shadow-lg">
+    <div className="flex flex-col md:flex-row gap-8 md:px-12">
+      <div className="flex justify-center items-center md:shadow-lg">
         <img
           src={productData.image}
           width={300}
           className="bg-slate-100 p-4 rounded-lg"
         />
       </div>
-      <div className="flex flex-col gap-4 items-start justify-center">
+      <div className="flex flex-col px-14 md:px-0 gap-4 items-start justify-center">
         <p className="text-[20px] font-semibold">{productData.productName}</p>
         <p className="capitalize">Variant: {color}</p>
         <p>Size: {size}</p>

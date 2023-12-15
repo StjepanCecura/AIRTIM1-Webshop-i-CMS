@@ -153,7 +153,7 @@ const ShoppingCart = () => {
       <p className="text-center text-[36px] font-semibold pt-8">
         Shopping Cart
       </p>
-      <div className="flex flex-col gap-8 px-60 py-8">
+      <div className="flex flex-col gap-8 md:px-60 py-8">
         {cartProducts.map((product) => {
           return (
             <CartProduct
