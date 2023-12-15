@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { getLoginStatus } from "../services/lsLoginStatus"
 import { getShoppingCart } from "../services/lsShoppingCart"
 import Spinner from "../components/Spinner"
@@ -8,6 +8,7 @@ import CartEmptySVG from "../assets/shopping-cart-empty.svg"
 import { ICartProduct } from "../interfaces/cartProduct.interface"
 import CartProduct from "../components/CartProduct"
 import Button from "../components/Button"
+import { CartContext } from "../services/CartContext"
 
 const ShoppingCart = () => {
   const [cartEmpty, setCartEmpty] = useState(true)
@@ -16,6 +17,8 @@ const ShoppingCart = () => {
   const [cartTotal, setCartTotal] = useState(0)
   const [loginStatus, setLoginStatus] = useState(false)
   const [currentCartId, setCurrentCartId] = useState("")
+
+  const { setCardContextState } = useContext(CartContext)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -30,7 +33,6 @@ const ShoppingCart = () => {
     await axios
       .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
       .then((res) => {
-        console.log("RES -> ", res)
         if (res?.data?.products.length > 0) {
           setCartEmpty(false)
           setCartProducts(res?.data?.products)
@@ -117,6 +119,16 @@ const ShoppingCart = () => {
     return () => {}
   }, [])
 
+  useEffect(() => {
+    if (cartEmpty === true) {
+      setCardContextState(false)
+    } else {
+      setCardContextState(true)
+    }
+
+    return () => {}
+  }, [cartEmpty])
+
   if (loadingStack.length > 0) {
     return (
       <div className="flex justify-center items-center flex-1">
@@ -146,6 +158,7 @@ const ShoppingCart = () => {
           return (
             <CartProduct
               key={product.productId}
+              getCartByCartId={getCartByCartId}
               productData={product}
               loginStatus={loginStatus}
               cartId={currentCartId}

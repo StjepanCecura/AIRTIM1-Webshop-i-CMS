@@ -175,7 +175,6 @@ const Product = () => {
       })
       .then((res) => {
         if (res?.status == 200) {
-          console.log("RES 3 -> ", res)
           toast("Added to cart.")
         }
         if (res?.data?.error) {

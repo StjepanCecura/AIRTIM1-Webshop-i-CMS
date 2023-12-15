@@ -1,5 +1,5 @@
 export interface ICartProduct {
-  id: string
+  lineItemId: string
   image: string
   price: number
   productId: string
@@ -8,4 +8,5 @@ export interface ICartProduct {
   quantity: number
   variantKey: string
   variantId: string
+  discountPrice: number
 }

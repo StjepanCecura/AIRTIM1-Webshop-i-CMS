@@ -12,16 +12,19 @@ const CartProduct = ({
   cartId,
   setCartTotal,
   cartTotal,
+  getCartByCartId,
 }: {
   productData: ICartProduct
   loginStatus: boolean
   cartId: string
   setCartTotal: React.Dispatch<React.SetStateAction<number>>
   cartTotal: number
+  getCartByCartId: (cartId: string) => void
 }) => {
   const [size, setSize] = useState("")
   const [color, setColor] = useState("")
   const [loadingStack, setLoadingStack] = useState<number[]>([])
+  const [loadingStackQuantity, setLoadingStackQuantity] = useState<number[]>([])
 
   const modifyData = () => {
     const data = productData.variantKey.split("-")
@@ -35,6 +38,14 @@ const CartProduct = ({
 
   const stopLoading = () => {
     setLoadingStack((prev) => prev.slice(0, -1))
+  }
+
+  const startLoadingQuantity = () => {
+    setLoadingStackQuantity((prev) => [...prev, 1])
+  }
+
+  const stopLoadingQuantity = () => {
+    setLoadingStackQuantity((prev) => prev.slice(0, -1))
   }
 
   const getCartVersionByCartId = async (cartId: string) => {
@@ -66,7 +77,7 @@ const CartProduct = ({
     variantId: string,
     quantity: number
   ) => {
-    startLoading()
+    startLoadingQuantity()
     await axios
       .post(`${API_URL}/product/addProductToCart`, {
         cartId: cartId,
@@ -77,7 +88,6 @@ const CartProduct = ({
       })
       .then((res) => {
         if (res?.status == 200) {
-          console.log("RES 3 -> ", res)
         }
         if (res?.data?.error) {
           console.log("addToCartByCartId ERROR 1 -> ", res?.data?.error)
@@ -89,12 +99,57 @@ const CartProduct = ({
       })
       .finally(() => {
         productData.quantity += 1
-        setCartTotal(cartTotal + productData.price)
-        stopLoading()
+        if (
+          productData.discountPrice != null &&
+          productData.discountPrice != undefined
+        ) {
+          setCartTotal((cartTotal += productData.discountPrice))
+        } else {
+          setCartTotal((cartTotal += productData.price))
+        }
+        stopLoadingQuantity()
       })
   }
 
-  const handleReduceQuantity = () => {}
+  const handleReduceQuantity = async () => {
+    if (productData.quantity != 1) {
+      startLoadingQuantity()
+      const cartVersion = await getCartVersionByCartId(cartId)
+      await axios
+        .post(`${API_URL}/product/removeProductFromCart`, {
+          cartId: cartId,
+          lineItemId: productData.lineItemId,
+          version: cartVersion,
+          quantity: 1,
+        })
+        .then((res) => {
+          if (res?.status == 200) {
+            console.log("RES handleReduceQuantity -> ", res)
+          }
+          if (res?.data?.error) {
+            console.log("handleReduceQuantity ERROR 1 -> ", res?.data?.error)
+            toast.error(
+              "Error while removing from cart. Please try again later."
+            )
+          }
+        })
+        .catch((err) => {
+          console.log("handleReduceQuantity ERROR 2 -> ", err)
+        })
+        .finally(() => {
+          productData.quantity -= 1
+          if (
+            productData.discountPrice != null &&
+            productData.discountPrice != undefined
+          ) {
+            setCartTotal((cartTotal -= productData.discountPrice))
+          } else {
+            setCartTotal((cartTotal -= productData.price))
+          }
+          stopLoadingQuantity()
+        })
+    }
+  }
 
   const handleAddQuantity = async () => {
     const cartVersion = await getCartVersionByCartId(cartId)
@@ -103,7 +158,7 @@ const CartProduct = ({
         cartId,
         cartVersion,
         productData.productId,
-        productData.variantKey,
+        productData.variantId,
         1 // add one product
       )
     } else {
@@ -111,11 +166,34 @@ const CartProduct = ({
     }
   }
 
-  const handleRemoveFromCart = async () => {}
+  const handleRemoveFromCart = async () => {
+    startLoading()
+    const cartVersion = await getCartVersionByCartId(cartId)
+    await axios
+      .post(`${API_URL}/product/removeProductFromCart`, {
+        cartId: cartId,
+        lineItemId: productData.lineItemId,
+        version: cartVersion,
+      })
+      .then((res) => {
+        if (res?.status == 200) {
+        }
+        if (res?.data?.error) {
+          console.log("handleRemoveFromCart ERROR 1 -> ", res?.data?.error)
+          toast.error("Error while removing from cart. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        console.log("handleRemoveFromCart ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+        getCartByCartId(cartId)
+      })
+  }
 
   useEffect(() => {
     modifyData()
-
     return () => {}
   }, [])
 
@@ -142,7 +220,7 @@ const CartProduct = ({
             <p className="select-none">-</p>
           </div>
           <div className="px-4 py-1 bg-tetriary">
-            {loadingStack.length > 0 ? (
+            {loadingStackQuantity.length > 0 ? (
               <Spinner width={22} />
             ) : (
               <p className="select-none">{productData.quantity}</p>
@@ -157,12 +235,27 @@ const CartProduct = ({
           </div>
         </div>
 
-        <p>
-          Price:{" "}
-          <span className="text-primary font-semibold">
-            {productData.price.toFixed(2).toString().replace(".", ",")} €{" "}
-          </span>
-        </p>
+        <div className="flex gap-1">
+          <p>Price: </p>
+          {productData.discountPrice ? (
+            <div className="flex gap-1 text-primary font-semibold">
+              <p>
+                {productData.discountPrice
+                  .toFixed(2)
+                  .toString()
+                  .replace(".", ",")}{" "}
+                €
+              </p>
+              <p className="line-through">
+                {productData.price.toFixed(2).toString().replace(".", ",")} €
+              </p>
+            </div>
+          ) : (
+            <p className=" text-primary font-semibold">
+              {productData.price.toFixed(2).toString().replace(".", ",")} €
+            </p>
+          )}
+        </div>
         <div
           className="hover:cursor-pointer"
           onClick={() => handleRemoveFromCart()}

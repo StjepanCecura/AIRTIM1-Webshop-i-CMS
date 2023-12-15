@@ -257,7 +257,6 @@ const Navbar = () => {
     await axios
       .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
       .then((res) => {
-        console.log("RES NAV -> ", res)
         if (res?.data?.products.length > 0) {
           setCartExists(true)
         } else {
@@ -275,7 +274,6 @@ const Navbar = () => {
     await axios
       .get(`${API_URL}/product/getCartByCustomerId`)
       .then((res) => {
-        console.log("RES USER -> ", res)
         id = res?.data?.cartId
       })
       .catch((err) => {
