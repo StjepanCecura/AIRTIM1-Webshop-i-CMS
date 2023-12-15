@@ -175,9 +175,7 @@ const ShoppingCart = () => {
             {cartTotal.toFixed(2).toString().replace(".", ",")} €
           </span>
         </p>
-        <br />
-        <hr />
-        <br />
+        <hr className="my-8" />
         <div className="flex justify-center w-full">
           <div className="w-[500px]">
             <Button
