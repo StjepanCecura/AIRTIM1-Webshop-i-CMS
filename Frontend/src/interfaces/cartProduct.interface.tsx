@@ -7,4 +7,5 @@ export interface ICartProduct {
   productName: string
   quantity: number
   variantKey: string
+  variantId: string
 }
