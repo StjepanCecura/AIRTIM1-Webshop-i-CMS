@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { ICartProduct } from "../interfaces/cartProduct.interface"
+import TrashSVG from "../assets/trash.svg"
 
 const CartProduct = ({ productData }: { productData: ICartProduct }) => {
   const [size, setSize] = useState("")
@@ -15,6 +16,8 @@ const CartProduct = ({ productData }: { productData: ICartProduct }) => {
 
   const handleAddQuantity = () => {}
 
+  const handleRemoveFromCart = async () => {}
+
   useEffect(() => {
     modifyData()
 
@@ -26,7 +29,7 @@ const CartProduct = ({ productData }: { productData: ICartProduct }) => {
       <div className="flex justify-center items-center">
         <img
           src={productData.image}
-          width={250}
+          width={300}
           className="bg-slate-100 p-4 rounded-lg"
         />
       </div>
@@ -34,7 +37,7 @@ const CartProduct = ({ productData }: { productData: ICartProduct }) => {
         <p className="text-[20px] font-semibold">{productData.productName}</p>
         <p className="capitalize">Variant: {color}</p>
         <p>Size: {size}</p>
-        <p>Quantity: {productData.quantity}</p>
+        <p>Quantity:</p>
 
         <div className="flex items-center gap-2">
           <div
@@ -61,6 +64,12 @@ const CartProduct = ({ productData }: { productData: ICartProduct }) => {
             {productData.price.toFixed(2).toString().replace(".", ",")} €{" "}
           </span>
         </p>
+        <div
+          className="hover:cursor-pointer"
+          onClick={() => handleRemoveFromCart()}
+        >
+          <img src={TrashSVG} width={30} />
+        </div>
       </div>
     </div>
   )
