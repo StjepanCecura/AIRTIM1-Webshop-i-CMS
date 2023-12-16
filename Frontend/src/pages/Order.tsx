@@ -4,6 +4,11 @@ import Input from "../components/Input"
 import Spinner from "../components/Spinner"
 import axios from "axios"
 import { API_URL } from "../constants"
+import SelectList from "../components/SelectList"
+import { ISelect } from "../interfaces/select.interface"
+import Button from "../components/Button"
+
+const countries = [{ value: "HR", label: "Croatia" }]
 
 const Order = () => {
   const location = useLocation()
@@ -13,13 +18,16 @@ const Order = () => {
   const [cartVersion, setCartVersion] = useState<number>()
   const [cartTotal, setCartTotal] = useState()
   const [orderData, setOrderData] = useState({
-    name: "",
+    firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    country: "",
-    address: "",
+    city: "",
+    postalCode: "",
+    streetName: "",
+    streetNumber: "",
   })
+  const [country, setCountry] = useState<ISelect>()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -61,6 +69,8 @@ const Order = () => {
     })
   }
 
+  const handleGoToNextStep = () => {}
+
   useEffect(() => {
     if (location != undefined) {
       setCartId(location.state.cartId)
@@ -85,17 +95,106 @@ const Order = () => {
   }
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-8">
-      <div className="flex flex-col gap-2">
-        <p>{cartId}</p>
+    <div className="flex flex-col px-8 gap-8 mb-8">
+      <p className="text-center text-[36px] font-semibold pt-8">
+        Order Details
+      </p>
+      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+        {/* <p>{cartId}</p>
         <p>{cartTotal}</p>
-        <hr />
-        <Input
-          type="text"
-          placeholder="Address"
-          onChange={(e) => handleChange("address", e.target.value)}
-          value={orderData.address}
-        />
+        <hr /> */}
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col justify-start w-full">
+              <p>First name:</p>
+              <Input
+                type="text"
+                placeholder="First name"
+                onChange={(e) => handleChange("firstName", e.target.value)}
+                value={orderData.firstName}
+              />
+            </div>
+            <div className="flex flex-col justify-start w-full">
+              <p>Last name:</p>
+              <Input
+                type="text"
+                placeholder="Last name"
+                onChange={(e) => handleChange("lastName", e.target.value)}
+                value={orderData.lastName}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Email:</p>
+            <Input
+              type="text"
+              placeholder="Email"
+              onChange={(e) => handleChange("email", e.target.value)}
+              value={orderData.email}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Phone:</p>
+            <Input
+              type="text"
+              placeholder="Phone"
+              onChange={(e) => handleChange("phone", e.target.value)}
+              value={orderData.phone}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Country:</p>
+            <SelectList
+              options={countries}
+              placeholder="Country"
+              setSelectedOption={setCountry}
+              selectedOption={country}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Postal code:</p>
+            <Input
+              type="text"
+              placeholder="Postal code"
+              onChange={(e) => handleChange("postalCode", e.target.value)}
+              value={orderData.postalCode}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>City:</p>
+            <Input
+              type="text"
+              placeholder="City"
+              onChange={(e) => handleChange("city", e.target.value)}
+              value={orderData.city}
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col justify-start w-full">
+              <p>Street name:</p>
+              <Input
+                type="text"
+                placeholder="Street name"
+                onChange={(e) => handleChange("streetName", e.target.value)}
+                value={orderData.streetName}
+              />
+            </div>
+            <div className="flex flex-col justify-start w-full">
+              <p>Street number:</p>
+              <Input
+                type="text"
+                placeholder="Street number"
+                onChange={(e) => handleChange("streetNumber", e.target.value)}
+                value={orderData.streetNumber}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center w-full mt-8">
+          <div className="w-[500px]">
+            <Button text="Next" onClick={() => handleGoToNextStep()} />
+          </div>
+        </div>
       </div>
     </div>
   )

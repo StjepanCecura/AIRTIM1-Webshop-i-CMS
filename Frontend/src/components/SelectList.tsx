@@ -26,7 +26,7 @@ const SelectList = ({
   // const [selectedOption, setSelectedOption] = useState(null)
 
   return (
-    <div className="flex flex-row justify-center items-center gap-2">
+    <div className="">
       <Select
         defaultValue={selectedOption}
         onChange={setSelectedOption}
