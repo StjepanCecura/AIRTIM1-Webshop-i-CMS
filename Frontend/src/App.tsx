@@ -10,6 +10,7 @@ import Navbar from "./layouts/Navbar"
 import Profile from "./pages/Profile"
 import DefaultPage from "./pages/DefaultPage"
 import Product from "./pages/Product"
+import ShoppingCart from "./pages/ShoppingCart"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           {/* Page with category. Eg. Black Friday, Sneakers page. */}
           <Route path="/c/:slug" element={<DefaultPage />} />
           <Route path="/p/:productKey/:variantKey" element={<Product />} />
+          <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

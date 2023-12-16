@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
 import MenuSVG from "../assets/menu.svg"
 import ProfileSVG from "../assets/profile.svg"
+import CartSVG from "../assets/shopping-cart.svg"
+import CartActiveSVG from "../assets/shopping-cart-active.svg"
 import MenuCloseSVG from "../assets/menu-close.svg"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -11,13 +13,17 @@ import axios from "axios"
 import { toast } from "react-toastify"
 import { IRoute } from "../interfaces/route.interface"
 import LogoPNG from "../assets/air-express-logo.png"
-
+import { CartContext } from "../services/CartContext"
+import { useContext } from "react"
+import { getShoppingCart } from "../services/lsShoppingCart"
 interface Props {
   loginStatus: string
   handleSignOutClick: () => void
   handleProfileClick: () => void
   handleSignInClick: () => void
+  handleCartClick: () => void
   routes: any
+  cartExists: boolean
 }
 
 const NavbarDesktop = ({
@@ -25,7 +31,9 @@ const NavbarDesktop = ({
   handleSignOutClick,
   handleProfileClick,
   handleSignInClick,
+  handleCartClick,
   routes,
+  cartExists,
 }: Props) => {
   return (
     <div className="hidden lg:flex flex-row px-10 py-3">
@@ -45,6 +53,20 @@ const NavbarDesktop = ({
         })}
       </div>
       <div className="flex flex-row items-center gap-6">
+        {cartExists ? (
+          <img
+            src={CartActiveSVG}
+            className="h-6 hover:cursor-pointer"
+            onClick={handleCartClick}
+          />
+        ) : (
+          <img
+            src={CartSVG}
+            className="h-6 hover:cursor-pointer"
+            onClick={handleCartClick}
+          />
+        )}
+
         <img
           src={ProfileSVG}
           className="h-7 hover:cursor-pointer"
@@ -75,7 +97,9 @@ const NavbarMobile = ({
   handleSignOutClick,
   handleProfileClick,
   handleSignInClick,
+  handleCartClick,
   routes,
+  cartExists,
 }: Props) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const handleMenuClick = () => {
@@ -92,6 +116,19 @@ const NavbarMobile = ({
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
+          {cartExists ? (
+            <img
+              src={CartActiveSVG}
+              className="h-6 hover:cursor-pointer"
+              onClick={handleCartClick}
+            />
+          ) : (
+            <img
+              src={CartSVG}
+              className="h-6 hover:cursor-pointer"
+              onClick={handleCartClick}
+            />
+          )}
           <img
             src={ProfileSVG}
             className="h-7 hover:cursor-pointer"
@@ -161,6 +198,9 @@ const Navbar = () => {
   const [loginStatus, setLoginStatus] = useState("")
   const [routes, setRoutes] = useState([{}])
   const [isLoading, setIsLoading] = useState(false)
+  const [cartExists, setCartExists] = useState(false)
+
+  const { cartContextState } = useContext(CartContext)
 
   const signOut = async () => {
     await axios
@@ -183,6 +223,10 @@ const Navbar = () => {
 
   const handleSignInClick = () => {
     navigate("/login")
+  }
+
+  const handleCartClick = () => {
+    navigate("/shopping-cart")
   }
 
   const getNavigationEntries = async () => {
@@ -209,10 +253,69 @@ const Navbar = () => {
       })
   }
 
+  const getCartByCartId = async (cartId: string) => {
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if (res?.data?.products.length > 0) {
+          setCartExists(true)
+        } else {
+          setCartExists(false)
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        setCartExists(false)
+      })
+  }
+
+  const getCartIdByUser = async () => {
+    let id: string | null
+    await axios
+      .get(`${API_URL}/product/getCartByCustomerId`)
+      .then((res) => {
+        id = res?.data?.cartId
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        id = null
+      })
+    return id
+  }
+
+  const checkShoppingCart = async () => {
+    if (loginStatus == null) {
+      // User is not logged in, check cart in LS
+      const cartIdFromLS = getShoppingCart()
+      if (cartIdFromLS != null) {
+        getCartByCartId(cartIdFromLS)
+      }
+    }
+    if (loginStatus == "true") {
+      // User is logged in, get cart for user
+      const cartIdByUser = await getCartIdByUser()
+      if ((cartIdByUser ?? "") != "") {
+        getCartByCartId(cartIdByUser)
+      }
+    }
+  }
+
   useEffect(() => {
     getNavigationEntries()
     return () => {}
   }, [])
+
+  useEffect(() => {
+    checkShoppingCart()
+    return () => {}
+  }, [loginStatus])
+
+  useEffect(() => {
+    if (cartContextState != null && cartContextState != undefined) {
+      setCartExists(cartContextState)
+    }
+    return () => {}
+  }, [cartContextState])
 
   useEffect(() => {
     const status = getLoginStatus()
@@ -229,14 +332,18 @@ const Navbar = () => {
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
+        handleCartClick={handleCartClick}
         routes={routes}
+        cartExists={cartExists}
       />
       <NavbarMobile
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
+        handleCartClick={handleCartClick}
         routes={routes}
+        cartExists={cartExists}
       />
     </>
   )

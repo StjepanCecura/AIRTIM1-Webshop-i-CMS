@@ -9,7 +9,7 @@ const ProductCard = ({ productData }: { productData: IProduct }) => {
   return (
     <div
       onClick={handleProductClick}
-      className=" flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white"
+      className=" flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white rounded-lg"
     >
       <div className="h-[300px] flex justify-center items-center">
         <img className="max-h-[300px]" src={productData.images[0].url} />
