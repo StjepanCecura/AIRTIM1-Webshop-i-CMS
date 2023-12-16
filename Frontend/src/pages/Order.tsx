@@ -107,7 +107,9 @@ const Order = () => {
   }
 
   const handleGoToNextStep = () => {
-    navigate("/order-payment")
+    navigate("/order-payment", {
+      state: { cartTotal: cartTotal, cartId: cartId, cartVersion: cartVersion },
+    })
   }
 
   useEffect(() => {

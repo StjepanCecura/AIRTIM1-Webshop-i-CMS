@@ -49,14 +49,15 @@ const OrderPayment = () => {
 
   const handleFinishOrder = () => {}
 
-  // useEffect(() => {
-  //   if (location != undefined) {
-  //     setCartId(location.state.cartId)
-  //     setCartTotal(location.state.cartTotal)
-  //   }
+  useEffect(() => {
+    if (location != undefined) {
+      setCartId(location.state.cartId)
+      setCartTotal(location.state.cartTotal)
+      setCartVersion(location.state.cartVersion)
+    }
 
-  //   return () => {}
-  // }, [location])
+    return () => {}
+  }, [location])
 
   if (loadingStack.length > 0) {
     return (
@@ -72,9 +73,10 @@ const OrderPayment = () => {
         Payment Details
       </p>
       <div className="flex flex-col gap-2 justify-center items-center md:px-96">
-        {/* <p>{cartId}</p>
+        <p>{cartId}</p>
         <p>{cartTotal}</p>
-        <hr /> */}
+        <p>{cartVersion}</p>
+        <hr />
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="flex flex-col justify-start w-full">

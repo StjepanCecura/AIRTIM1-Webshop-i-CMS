@@ -39,25 +39,26 @@ const Profile = () => {
   const getCustomerData = async () => {
     startLoading()
     await axios
-      .get(`${API_URL}/customer`)
+      .get(`${API_URL}/customer/getCustomerAddress`)
       .then((res) => {
-        const firstName = res?.data?.userData?.firstName
-        const email = res?.data?.userData?.email
-        const phoneNumber = res?.data?.userData?.phoneNumber
-        setProfileData({
-          firstName: firstName,
-          lastName: "",
-          email: email,
-          phoneNumber: phoneNumber,
-          country: {
-            value: "",
-            label: "",
-          },
-          city: "",
-          postalCode: "",
-          streetName: "",
-          streetNumber: "",
-        })
+        console.log("RES -> ", res)
+        // const firstName = res?.data?.userData?.firstName
+        // const email = res?.data?.userData?.email
+        // const phoneNumber = res?.data?.userData?.phoneNumber
+        // setProfileData({
+        //   firstName: firstName,
+        //   lastName: "",
+        //   email: email,
+        //   phoneNumber: phoneNumber,
+        //   country: {
+        //     value: "",
+        //     label: "",
+        //   },
+        //   city: "",
+        //   postalCode: "",
+        //   streetName: "",
+        //   streetNumber: "",
+        // })
       })
       .catch((err) => {
         if (err?.response.status != 403) {
