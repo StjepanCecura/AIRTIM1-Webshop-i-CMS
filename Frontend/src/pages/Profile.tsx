@@ -39,7 +39,7 @@ const Profile = () => {
   const getCustomerData = async () => {
     startLoading()
     await axios
-      .get(`${API_URL}/customer/getCustomerAddress`)
+      .get(`${API_URL}/customer`)
       .then((res) => {
         console.log("RES -> ", res)
         // const firstName = res?.data?.userData?.firstName
@@ -61,7 +61,7 @@ const Profile = () => {
         // })
       })
       .catch((err) => {
-        if (err?.response.status != 403) {
+        if (err?.response?.status != 403) {
           toast.error("Error loading profile. Please try again later.")
           navigate("/")
         }
