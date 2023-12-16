@@ -7,6 +7,8 @@ import { API_URL } from "../constants"
 import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Button from "../components/Button"
+import { ICustomer } from "../interfaces/customer.interface"
+import { getLoginStatus } from "../services/lsLoginStatus"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -17,11 +19,12 @@ const Order = () => {
   const [cartId, setCartId] = useState("")
   const [cartVersion, setCartVersion] = useState<number>()
   const [cartTotal, setCartTotal] = useState()
-  const [orderData, setOrderData] = useState({
+  const [orderData, setOrderData] = useState<ICustomer>({
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
+    country: { value: "", label: "" },
     city: "",
     postalCode: "",
     streetName: "",
@@ -59,6 +62,39 @@ const Order = () => {
     setCartVersion(version)
   }
 
+  const getCustomerData = async () => {
+    startLoading()
+    await axios
+      .get(`${API_URL}/customer`)
+      .then((res) => {
+        const firstName = res?.data?.userData?.firstName
+        const email = res?.data?.userData?.email
+        const phoneNumber = res?.data?.userData?.phoneNumber
+        setOrderData({
+          firstName: firstName,
+          lastName: "",
+          email: email,
+          phoneNumber: phoneNumber,
+          country: {
+            value: "",
+            label: "",
+          },
+          city: "",
+          postalCode: "",
+          streetName: "",
+          streetNumber: "",
+        })
+      })
+      .catch((err) => {
+        if (err?.response.status != 403) {
+          console.log("403 -> Order")
+        }
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const handleChange = (
     key: keyof typeof orderData,
     value: number | string | boolean
@@ -70,6 +106,12 @@ const Order = () => {
   }
 
   const handleGoToNextStep = () => {}
+
+  useEffect(() => {
+    const loginStatus = getLoginStatus()
+    if (loginStatus == "true") getCustomerData()
+    return () => {}
+  }, [])
 
   useEffect(() => {
     if (location != undefined) {
@@ -85,6 +127,20 @@ const Order = () => {
       getCartVersionByCartId(cartId)
     return () => {}
   }, [cartId])
+
+  useEffect(() => {
+    if (country != undefined && country != null) {
+      setOrderData({
+        ...orderData,
+        country: {
+          value: country.value,
+          label: country.label,
+        },
+      })
+    }
+
+    return () => {}
+  }, [country])
 
   if (loadingStack.length > 0) {
     return (
@@ -138,8 +194,8 @@ const Order = () => {
             <Input
               type="text"
               placeholder="Phone"
-              onChange={(e) => handleChange("phone", e.target.value)}
-              value={orderData.phone}
+              onChange={(e) => handleChange("phoneNumber", e.target.value)}
+              value={orderData.phoneNumber}
             />
           </div>
           <div className="flex flex-col justify-start">

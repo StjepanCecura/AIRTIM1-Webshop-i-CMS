@@ -77,7 +77,7 @@ const ShoppingCart = () => {
     await axios
       .get(`${API_URL}/product/getCartByCustomerId`)
       .then((res) => {
-        console.log("RES USER -> ", res)
+        // console.log("RES USER -> ", res)
         if (res?.data?.cartId === null) {
           // User doesn't have registered cart -> make one
           createCartForUser()

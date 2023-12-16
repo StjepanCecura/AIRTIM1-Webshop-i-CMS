@@ -10,16 +10,22 @@ import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Input from "../components/Input"
 
-const countries = [{ value: "cro", label: "Croatia" }]
+const countries = [{ value: "HR", label: "Croatia" }]
 
 const Profile = () => {
-  const [customer, setCustomer] = useState<ICustomer>({
-    firstName: "",
-    email: "",
-    phoneNumber: "",
-  })
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const navigate = useNavigate()
+  const [profileData, setProfileData] = useState<ICustomer>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    country: { value: "", label: "" },
+    city: "",
+    postalCode: "",
+    streetName: "",
+    streetNumber: "",
+  })
   const [country, setCountry] = useState<ISelect>()
 
   const startLoading = () => {
@@ -38,10 +44,19 @@ const Profile = () => {
         const firstName = res?.data?.userData?.firstName
         const email = res?.data?.userData?.email
         const phoneNumber = res?.data?.userData?.phoneNumber
-        setCustomer({
+        setProfileData({
           firstName: firstName,
+          lastName: "",
           email: email,
           phoneNumber: phoneNumber,
+          country: {
+            value: "",
+            label: "",
+          },
+          city: "",
+          postalCode: "",
+          streetName: "",
+          streetNumber: "",
         })
       })
       .catch((err) => {
@@ -61,10 +76,42 @@ const Profile = () => {
       })
   }
 
+  const handleChange = (
+    key: keyof typeof profileData,
+    value: number | string | boolean
+  ) => {
+    setProfileData({
+      ...profileData,
+      [key]: value,
+    })
+  }
+
+  const handleSaveChangesClick = () => {}
+
   useEffect(() => {
     getCustomerData()
     return () => {}
   }, [])
+
+  useEffect(() => {
+    if (country != undefined && country != null) {
+      setProfileData({
+        ...profileData,
+        country: {
+          value: country.value,
+          label: country.label,
+        },
+      })
+    }
+
+    return () => {}
+  }, [country])
+
+  useEffect(() => {
+    //console.log(profileData)
+
+    return () => {}
+  }, [profileData])
 
   if (loadingStack.length > 0) {
     return (
@@ -75,29 +122,106 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col px-10 gap-2">
-      <p>
-        Hello, <span className="capitalize">{customer.firstName}</span>!
-      </p>
-      <p>Email: {customer.email}</p>
-      <p>Phone number: {customer.phoneNumber}</p>
-      <div className="flex flex-row gap-1 items-center">
-        <p>Country: </p>
-        <SelectList
-          options={countries}
-          placeholder="Country"
-          setSelectedOption={setCountry}
-          selectedOption={country}
-        />
-      </div>
-      <div className="flex flex-row gap-1 items-center">
-        <p>Address: </p>
-        <Input
-          placeholder="Address"
-          onChange={() => {}}
-          type="text"
-          value="bok"
-        />
+    <div className="flex flex-col px-8 gap-8 mb-8">
+      <p className="text-center text-[36px] font-semibold pt-8">Profile</p>
+      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col justify-start w-full">
+              <p>First name:</p>
+              <Input
+                type="text"
+                placeholder="First name"
+                onChange={(e) => handleChange("firstName", e.target.value)}
+                value={profileData.firstName}
+              />
+            </div>
+            <div className="flex flex-col justify-start w-full">
+              <p>Last name:</p>
+              <Input
+                type="text"
+                placeholder="Last name"
+                onChange={(e) => handleChange("lastName", e.target.value)}
+                value={profileData.lastName}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Email:</p>
+            <Input
+              disabled
+              type="text"
+              placeholder="Email"
+              // onChange={(e) => handleChange("email", e.target.value)}
+              onChange={() => {}}
+              value={profileData.email}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Phone:</p>
+            <Input
+              type="text"
+              placeholder="Phone"
+              onChange={(e) => handleChange("phoneNumber", e.target.value)}
+              value={profileData.phoneNumber}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Country:</p>
+            <SelectList
+              options={countries}
+              placeholder="Country"
+              setSelectedOption={setCountry}
+              selectedOption={country}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>Postal code:</p>
+            <Input
+              type="text"
+              placeholder="Postal code"
+              onChange={(e) => handleChange("postalCode", e.target.value)}
+              value={profileData.postalCode}
+            />
+          </div>
+          <div className="flex flex-col justify-start">
+            <p>City:</p>
+            <Input
+              type="text"
+              placeholder="City"
+              onChange={(e) => handleChange("city", e.target.value)}
+              value={profileData.city}
+            />
+          </div>
+          <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col justify-start w-full">
+              <p>Street name:</p>
+              <Input
+                type="text"
+                placeholder="Street name"
+                onChange={(e) => handleChange("streetName", e.target.value)}
+                value={profileData.streetName}
+              />
+            </div>
+            <div className="flex flex-col justify-start w-full">
+              <p>Street number:</p>
+              <Input
+                type="text"
+                placeholder="Street number"
+                onChange={(e) => handleChange("streetNumber", e.target.value)}
+                value={profileData.streetNumber}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center w-full mt-8">
+          <div className="w-[500px]">
+            <Button
+              text="Save changes"
+              onClick={() => handleSaveChangesClick()}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )
