@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Input from "../components/Input"
 import Spinner from "../components/Spinner"
 import axios from "axios"
@@ -14,6 +14,7 @@ const countries = [{ value: "HR", label: "Croatia" }]
 
 const Order = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [cartId, setCartId] = useState("")
@@ -105,7 +106,9 @@ const Order = () => {
     })
   }
 
-  const handleGoToNextStep = () => {}
+  const handleGoToNextStep = () => {
+    navigate("/order-payment")
+  }
 
   useEffect(() => {
     const loginStatus = getLoginStatus()
@@ -153,7 +156,7 @@ const Order = () => {
   return (
     <div className="flex flex-col px-8 gap-8 mb-8">
       <p className="text-center text-[36px] font-semibold pt-8">
-        Order Details
+        Shipping Details
       </p>
       <div className="flex flex-col gap-2 justify-center items-center md:px-96">
         {/* <p>{cartId}</p>
@@ -248,7 +251,7 @@ const Order = () => {
         </div>
         <div className="flex justify-center w-full mt-8">
           <div className="w-[500px]">
-            <Button text="Next" onClick={() => handleGoToNextStep()} />
+            <Button text="Go to payment" onClick={() => handleGoToNextStep()} />
           </div>
         </div>
       </div>
