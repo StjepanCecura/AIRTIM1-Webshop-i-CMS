@@ -29,6 +29,7 @@ const Profile = () => {
     streetNumber: "",
   })
   const [country, setCountry] = useState<ISelect>()
+  const [userHasAddress, setUserHasAddress] = useState(false)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -43,6 +44,14 @@ const Profile = () => {
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
+        if (
+          res?.data?.userData?.address === undefined ||
+          res?.data?.userData?.address === null
+        ) {
+          setUserHasAddress(false)
+        } else {
+          setUserHasAddress(true)
+        }
         const id = res?.data?.userData?.id ?? ""
         const firstName = res?.data?.userData?.firstName ?? ""
         const lastName = res?.data?.userData?.lastName ?? ""
@@ -100,7 +109,74 @@ const Profile = () => {
     })
   }
 
-  const handleSaveChangesClick = () => {}
+  const updateCustomerData = async () => {
+    startLoading()
+    await axios
+      .put(`${API_URL}/customer/changeCustomerAddress`, {
+        addressId: profileData.addressId,
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        phoneNumber: profileData.phoneNumber,
+        country: profileData.country,
+        city: profileData.city,
+        postalCode: profileData.postalCode,
+        streetName: profileData.streetName,
+        streetNumber: profileData.streetNumber,
+      })
+      .then((res) => {
+        console.log("RESPONS -> ", res)
+        if (res?.status == 200) {
+          toast("Changes saved successfully.")
+          navigate("/")
+        }
+        if (res?.data?.error) {
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while saving changes. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const addCustomerData = async () => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/customer/addCustomerAddress`, {
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        phoneNumber: profileData.phoneNumber,
+        country: profileData.country,
+        city: profileData.city,
+        postalCode: profileData.postalCode,
+        streetName: profileData.streetName,
+        streetNumber: profileData.streetNumber,
+      })
+      .then((res) => {
+        console.log("RESPONS 2 -> ", res)
+        if (res?.status == 200) {
+          toast("Changes saved successfully.")
+          navigate("/")
+        }
+        if (res?.data?.error) {
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while saving changes. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const handleSaveChangesClick = () => {
+    if (userHasAddress) {
+      updateCustomerData()
+    } else {
+      addCustomerData()
+    }
+  }
 
   useEffect(() => {
     getCustomerData()
