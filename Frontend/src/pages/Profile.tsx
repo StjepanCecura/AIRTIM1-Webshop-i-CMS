@@ -16,12 +16,14 @@ const Profile = () => {
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const navigate = useNavigate()
   const [profileData, setProfileData] = useState<ICustomer>({
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    country: { value: "", label: "" },
+    addressId: "",
     city: "",
+    country: "",
     postalCode: "",
     streetName: "",
     streetNumber: "",
@@ -41,24 +43,35 @@ const Profile = () => {
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
-        console.log("RES -> ", res)
-        // const firstName = res?.data?.userData?.firstName
-        // const email = res?.data?.userData?.email
-        // const phoneNumber = res?.data?.userData?.phoneNumber
-        // setProfileData({
-        //   firstName: firstName,
-        //   lastName: "",
-        //   email: email,
-        //   phoneNumber: phoneNumber,
-        //   country: {
-        //     value: "",
-        //     label: "",
-        //   },
-        //   city: "",
-        //   postalCode: "",
-        //   streetName: "",
-        //   streetNumber: "",
-        // })
+        const id = res?.data?.userData?.id ?? ""
+        const firstName = res?.data?.userData?.firstName ?? ""
+        const lastName = res?.data?.userData?.lastName ?? ""
+        const email = res?.data?.userData?.email ?? ""
+        const phoneNumber = res?.data?.userData?.phoneNumber ?? ""
+        const addressId = res?.data?.userData?.address?.id ?? ""
+        const city = res?.data?.userData?.address?.city ?? ""
+        const country = res?.data?.userData?.address?.country ?? ""
+        const postalCode = res?.data?.userData?.address?.postalCode ?? ""
+        const streetName = res?.data?.userData?.address?.streetName ?? ""
+        const streetNumber = res?.data?.userData?.address?.streetNumber ?? ""
+
+        setProfileData({
+          id: id,
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          phoneNumber: phoneNumber,
+          addressId: addressId,
+          city: city,
+          country: country,
+          postalCode: postalCode,
+          streetName: streetName,
+          streetNumber: streetNumber,
+        })
+        if (country != "") {
+          let c = countries.find((c) => c.value == country)
+          setCountry(c)
+        }
       })
       .catch((err) => {
         if (err?.response?.status != 403) {
@@ -98,10 +111,7 @@ const Profile = () => {
     if (country != undefined && country != null) {
       setProfileData({
         ...profileData,
-        country: {
-          value: country.value,
-          label: country.label,
-        },
+        country: country.value,
       })
     }
 

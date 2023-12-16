@@ -21,12 +21,14 @@ const Order = () => {
   const [cartVersion, setCartVersion] = useState<number>()
   const [cartTotal, setCartTotal] = useState()
   const [orderData, setOrderData] = useState<ICustomer>({
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
     phoneNumber: "",
-    country: { value: "", label: "" },
+    addressId: "",
     city: "",
+    country: "",
     postalCode: "",
     streetName: "",
     streetNumber: "",
@@ -68,23 +70,35 @@ const Order = () => {
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
-        const firstName = res?.data?.userData?.firstName
-        const email = res?.data?.userData?.email
-        const phoneNumber = res?.data?.userData?.phoneNumber
+        const id = res?.data?.userData?.id ?? ""
+        const firstName = res?.data?.userData?.firstName ?? ""
+        const lastName = res?.data?.userData?.lastName ?? ""
+        const email = res?.data?.userData?.email ?? ""
+        const phoneNumber = res?.data?.userData?.phoneNumber ?? ""
+        const addressId = res?.data?.userData?.address?.id ?? ""
+        const city = res?.data?.userData?.address?.city ?? ""
+        const country = res?.data?.userData?.address?.country ?? ""
+        const postalCode = res?.data?.userData?.address?.postalCode ?? ""
+        const streetName = res?.data?.userData?.address?.streetName ?? ""
+        const streetNumber = res?.data?.userData?.address?.streetNumber ?? ""
+
         setOrderData({
+          id: id,
           firstName: firstName,
-          lastName: "",
+          lastName: lastName,
           email: email,
           phoneNumber: phoneNumber,
-          country: {
-            value: "",
-            label: "",
-          },
-          city: "",
-          postalCode: "",
-          streetName: "",
-          streetNumber: "",
+          addressId: addressId,
+          city: city,
+          country: country,
+          postalCode: postalCode,
+          streetName: streetName,
+          streetNumber: streetNumber,
         })
+        if (country != "") {
+          let c = countries.find((c) => c.value == country)
+          setCountry(c)
+        }
       })
       .catch((err) => {
         if (err?.response.status != 403) {
@@ -137,10 +151,7 @@ const Order = () => {
     if (country != undefined && country != null) {
       setOrderData({
         ...orderData,
-        country: {
-          value: country.value,
-          label: country.label,
-        },
+        country: country.value,
       })
     }
 

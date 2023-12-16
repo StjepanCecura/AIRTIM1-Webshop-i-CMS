@@ -1,13 +1,12 @@
 export interface ICustomer {
+  id: string
   firstName: string
   lastName: string
   email: string
   phoneNumber: string
-  country: {
-    value: string
-    label: string
-  }
+  addressId: string
   city: string
+  country: string
   postalCode: string
   streetName: string
   streetNumber: string
