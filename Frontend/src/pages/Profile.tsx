@@ -124,12 +124,11 @@ const Profile = () => {
         streetNumber: profileData.streetNumber,
       })
       .then((res) => {
-        console.log("RESPONS -> ", res)
         if (res?.status == 200) {
-          toast("Changes saved successfully.")
-          navigate("/")
+          if (res?.data?.success == true) toast("Changes saved successfully.")
         }
         if (res?.data?.error) {
+          toast.error("Error while saving changes. Please try again later.")
         }
       })
       .catch((err) => {
@@ -154,12 +153,11 @@ const Profile = () => {
         streetNumber: profileData.streetNumber,
       })
       .then((res) => {
-        console.log("RESPONS 2 -> ", res)
         if (res?.status == 200) {
-          toast("Changes saved successfully.")
-          navigate("/")
+          if (res?.data?.success == true) toast("Changes saved successfully.")
         }
         if (res?.data?.error) {
+          toast.error("Error while saving changes. Please try again later.")
         }
       })
       .catch((err) => {
