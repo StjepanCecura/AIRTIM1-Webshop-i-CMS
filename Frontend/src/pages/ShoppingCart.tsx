@@ -58,7 +58,6 @@ const ShoppingCart = () => {
       .post(`${API_URL}/product/createCartForUser`)
       .then((res) => {
         if (res?.status == 200) {
-          console.log("MADE CART FOR USER -> ", res)
         }
         if (res?.data?.error) {
           console.log("createCartForUser ERROR 1 -> ", res?.data?.error)

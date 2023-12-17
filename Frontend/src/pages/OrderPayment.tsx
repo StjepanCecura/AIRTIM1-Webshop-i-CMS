@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Input from "../components/Input"
 import Spinner from "../components/Spinner"
 import axios from "axios"
 import { API_URL } from "../constants"
-import SelectList from "../components/SelectList"
-import { ISelect } from "../interfaces/select.interface"
 import Button from "../components/Button"
-import { getLoginStatus } from "../services/lsLoginStatus"
 import { toast } from "react-toastify"
+import { useContext } from "react"
+import { CartContext } from "../services/CartContext"
 
 const OrderPayment = () => {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [cartId, setCartId] = useState("")
@@ -21,6 +21,7 @@ const OrderPayment = () => {
     expireDate: "",
     cvv: "",
   })
+  const { setCardContextState } = useContext(CartContext)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -42,7 +43,7 @@ const OrderPayment = () => {
 
   const makeOrder = async (_cartVersion: number) => {
     startLoading()
-    await axios
+    let success = await axios
       .post(`${API_URL}/product/createOrder`, {
         cartId: cartId,
         version: _cartVersion,
@@ -51,18 +52,23 @@ const OrderPayment = () => {
         if (res?.status == 200) {
           if (res?.data?.success == true) {
             toast("Order placed successfully.")
+            navigate("/")
+            return true
           }
         }
         if (res?.data?.error) {
           toast.error("Error while placing order. Please try again later.")
+          return false
         }
       })
       .catch((err) => {
         toast.error("Error while placing order. Please try again later.")
+        return false
       })
       .finally(() => {
         stopLoading()
       })
+    return success
   }
 
   const getCartVersionByCartId = async () => {
@@ -89,7 +95,8 @@ const OrderPayment = () => {
 
   const handleFinishOrder = async () => {
     const _cartVersion = await getCartVersionByCartId()
-    await makeOrder(_cartVersion)
+    const orderSuccess = await makeOrder(_cartVersion)
+    orderSuccess ? setCardContextState(false) : setCardContextState(true)
   }
 
   useEffect(() => {
