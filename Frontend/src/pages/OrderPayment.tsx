@@ -15,14 +15,12 @@ const OrderPayment = () => {
 
   const [loadingStack, setLoadingStack] = useState<number[]>([])
   const [cartId, setCartId] = useState("")
-  const [cartVersion, setCartVersion] = useState<number>()
   const [cartTotal, setCartTotal] = useState()
   const [paymentData, setPaymentData] = useState({
     cardNumber: "",
     expireDate: "",
     cvv: "",
   })
-  const [country, setCountry] = useState<ISelect>()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -42,12 +40,12 @@ const OrderPayment = () => {
     })
   }
 
-  const makeOrder = async () => {
+  const makeOrder = async (_cartVersion: number) => {
     startLoading()
     await axios
       .post(`${API_URL}/product/createOrder`, {
         cartId: cartId,
-        version: cartVersion,
+        version: _cartVersion,
       })
       .then((res) => {
         if (res?.status == 200) {
@@ -67,15 +65,37 @@ const OrderPayment = () => {
       })
   }
 
-  const handleFinishOrder = () => {
-    makeOrder()
+  const getCartVersionByCartId = async () => {
+    startLoading()
+    let version: number | null
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if ((res?.data?.version ?? "") != "") {
+          version = res?.data?.version
+        } else {
+          version = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        version = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return version
+  }
+
+  const handleFinishOrder = async () => {
+    const _cartVersion = await getCartVersionByCartId()
+    await makeOrder(_cartVersion)
   }
 
   useEffect(() => {
     if (location != undefined) {
       setCartId(location.state.cartId)
       setCartTotal(location.state.cartTotal)
-      setCartVersion(location.state.cartVersion)
     }
 
     return () => {}

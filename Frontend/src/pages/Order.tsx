@@ -144,7 +144,6 @@ const Order = () => {
               state: {
                 cartTotal: cartTotal,
                 cartId: cartId,
-                cartVersion: cartVersion,
               },
             })
           }
