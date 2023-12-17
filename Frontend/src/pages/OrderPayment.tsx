@@ -8,6 +8,7 @@ import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Button from "../components/Button"
 import { getLoginStatus } from "../services/lsLoginStatus"
+import { toast } from "react-toastify"
 
 const OrderPayment = () => {
   const location = useLocation()
@@ -17,15 +18,9 @@ const OrderPayment = () => {
   const [cartVersion, setCartVersion] = useState<number>()
   const [cartTotal, setCartTotal] = useState()
   const [paymentData, setPaymentData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    country: { value: "", label: "" },
-    city: "",
-    postalCode: "",
-    streetName: "",
-    streetNumber: "",
+    cardNumber: "",
+    expireDate: "",
+    cvv: "",
   })
   const [country, setCountry] = useState<ISelect>()
 
@@ -47,7 +42,34 @@ const OrderPayment = () => {
     })
   }
 
-  const handleFinishOrder = () => {}
+  const makeOrder = async () => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/product/createOrder`, {
+        cartId: cartId,
+        version: cartVersion,
+      })
+      .then((res) => {
+        if (res?.status == 200) {
+          if (res?.data?.success == true) {
+            toast("Order placed successfully.")
+          }
+        }
+        if (res?.data?.error) {
+          toast.error("Error while placing order. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while placing order. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const handleFinishOrder = () => {
+    makeOrder()
+  }
 
   useEffect(() => {
     if (location != undefined) {
@@ -73,9 +95,9 @@ const OrderPayment = () => {
         Payment Details
       </p>
       <div className="flex flex-col gap-2 justify-center items-center md:px-96">
-        <p>{cartId}</p>
+        {/* <p>{cartId}</p>
         <p>{cartTotal}</p>
-        <p>{cartVersion}</p>
+        <p>{cartVersion}</p> */}
         <hr />
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col md:flex-row gap-2">
@@ -83,28 +105,28 @@ const OrderPayment = () => {
               <p>Card number:</p>
               <Input
                 type="text"
-                placeholder="First name"
-                onChange={(e) => handleChange("firstName", e.target.value)}
-                value={paymentData.firstName}
+                placeholder="Card number"
+                onChange={(e) => handleChange("cardNumber", e.target.value)}
+                value={paymentData.cardNumber}
               />
             </div>
             <div className="flex flex-col justify-start w-full">
-              <p>Last name:</p>
+              <p>Expire date:</p>
               <Input
                 type="text"
-                placeholder="Last name"
-                onChange={(e) => handleChange("lastName", e.target.value)}
-                value={paymentData.lastName}
+                placeholder="Expire date"
+                onChange={(e) => handleChange("expireDate", e.target.value)}
+                value={paymentData.expireDate}
               />
             </div>
           </div>
           <div className="flex flex-col justify-start">
-            <p>Phone:</p>
+            <p>CVV:</p>
             <Input
               type="text"
-              placeholder="Phone"
-              onChange={(e) => handleChange("phoneNumber", e.target.value)}
-              value={paymentData.phoneNumber}
+              placeholder="CVV"
+              onChange={(e) => handleChange("cvv", e.target.value)}
+              value={paymentData.cvv}
             />
           </div>
         </div>
