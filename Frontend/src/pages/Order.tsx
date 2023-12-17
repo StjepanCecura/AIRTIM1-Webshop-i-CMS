@@ -9,6 +9,7 @@ import { ISelect } from "../interfaces/select.interface"
 import Button from "../components/Button"
 import { ICustomer } from "../interfaces/customer.interface"
 import { getLoginStatus } from "../services/lsLoginStatus"
+import { toast } from "react-toastify"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -120,10 +121,67 @@ const Order = () => {
     })
   }
 
+  const addShippingDetailsToCart = async () => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/product/addShippingAddress`, {
+        cartId: cartId,
+        version: cartVersion,
+        firstName: orderData.firstName,
+        lastName: orderData.lastName,
+        email: orderData.email,
+        phone: orderData.phoneNumber,
+        country: orderData.country,
+        city: orderData.city,
+        postalCode: orderData.postalCode,
+        streetName: orderData.streetName,
+        streetNumber: orderData.streetNumber,
+      })
+      .then((res) => {
+        if (res?.status == 200) {
+          if (res?.data?.success == true) {
+            navigate("/order-payment", {
+              state: {
+                cartTotal: cartTotal,
+                cartId: cartId,
+                cartVersion: cartVersion,
+              },
+            })
+          }
+        }
+        if (res?.data?.error) {
+          toast.error("Error while saving changes. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while saving changes. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const verifyShippingDetails = () => {
+    let error = false
+    if (orderData.firstName == "") error = true
+    if (orderData.lastName == "") error = true
+    if (orderData.email == "") error = true
+    if (orderData.phoneNumber == "") error = true
+    if (orderData.city == "") error = true
+    if (orderData.country == "") error = true
+    if (orderData.postalCode == "") error = true
+    if (orderData.streetName == "") error = true
+    if (orderData.streetNumber == "") error = true
+    return error
+  }
+
   const handleGoToNextStep = () => {
-    navigate("/order-payment", {
-      state: { cartTotal: cartTotal, cartId: cartId, cartVersion: cartVersion },
-    })
+    const verifyError = verifyShippingDetails()
+    if (verifyError === true) {
+      toast("Please enter all shipping details.")
+    } else {
+      addShippingDetailsToCart()
+    }
   }
 
   useEffect(() => {
