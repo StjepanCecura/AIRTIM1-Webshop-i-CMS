@@ -8,6 +8,8 @@ import Button from "../components/Button"
 import { toast } from "react-toastify"
 import { useContext } from "react"
 import { CartContext } from "../services/CartContext"
+import { getLoginStatus } from "../services/lsLoginStatus"
+import { removeShoppingCartId } from "../services/lsShoppingCart"
 
 const OrderPayment = () => {
   const location = useLocation()
@@ -97,6 +99,10 @@ const OrderPayment = () => {
     const _cartVersion = await getCartVersionByCartId()
     const orderSuccess = await makeOrder(_cartVersion)
     orderSuccess ? setCardContextState(false) : setCardContextState(true)
+    const loginStatus = getLoginStatus()
+    if (loginStatus != "true") {
+      removeShoppingCartId()
+    }
   }
 
   useEffect(() => {
