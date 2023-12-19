@@ -9,6 +9,7 @@ import { ICartProduct } from "../interfaces/cartProduct.interface"
 import CartProduct from "../components/CartProduct"
 import Button from "../components/Button"
 import { CartContext } from "../services/CartContext"
+import { useNavigate } from "react-router-dom"
 
 const ShoppingCart = () => {
   const [cartEmpty, setCartEmpty] = useState(true)
@@ -17,6 +18,8 @@ const ShoppingCart = () => {
   const [cartTotal, setCartTotal] = useState(0)
   const [loginStatus, setLoginStatus] = useState(false)
   const [currentCartId, setCurrentCartId] = useState("")
+
+  const navigate = useNavigate()
 
   const { setCardContextState } = useContext(CartContext)
 
@@ -55,7 +58,6 @@ const ShoppingCart = () => {
       .post(`${API_URL}/product/createCartForUser`)
       .then((res) => {
         if (res?.status == 200) {
-          console.log("MADE CART FOR USER -> ", res)
         }
         if (res?.data?.error) {
           console.log("createCartForUser ERROR 1 -> ", res?.data?.error)
@@ -74,7 +76,7 @@ const ShoppingCart = () => {
     await axios
       .get(`${API_URL}/product/getCartByCustomerId`)
       .then((res) => {
-        console.log("RES USER -> ", res)
+        // console.log("RES USER -> ", res)
         if (res?.data?.cartId === null) {
           // User doesn't have registered cart -> make one
           createCartForUser()
@@ -93,7 +95,9 @@ const ShoppingCart = () => {
   }
 
   const handleGoToCheckoutClick = () => {
-    alert("BOK")
+    navigate("/order", {
+      state: { cartTotal: cartTotal, cartId: currentCartId },
+    })
   }
 
   useEffect(() => {

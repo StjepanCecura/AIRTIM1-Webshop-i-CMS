@@ -7,9 +7,17 @@ interface Props {
   onChange: (e: any) => void
   value: string
   errorMessage?: string
+  disabled?: boolean
 }
 
-const Input = ({ type, placeholder, onChange, value, errorMessage }: Props) => {
+const Input = ({
+  type,
+  placeholder,
+  onChange,
+  value,
+  errorMessage,
+  disabled,
+}: Props) => {
   const borderColorClass =
     (errorMessage ?? "") == "" ? "border-tetriary" : "border-red-500"
 
@@ -27,6 +35,7 @@ const Input = ({ type, placeholder, onChange, value, errorMessage }: Props) => {
       <div className="relative">
         <input
           onChange={onChange}
+          disabled={disabled}
           value={value}
           placeholder={placeholder}
           type={isPassword ? passwordState : type}

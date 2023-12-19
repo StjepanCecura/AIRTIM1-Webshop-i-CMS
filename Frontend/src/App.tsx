@@ -11,6 +11,8 @@ import Profile from "./pages/Profile"
 import DefaultPage from "./pages/DefaultPage"
 import Product from "./pages/Product"
 import ShoppingCart from "./pages/ShoppingCart"
+import Order from "./pages/Order"
+import OrderPayment from "./pages/OrderPayment"
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/shopping-cart" element={<ShoppingCart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/order" element={<Order />} />
+          <Route path="/order-payment" element={<OrderPayment />} />
           <Route
             path="/email-verification/:id"
             element={<EmailVerification />}

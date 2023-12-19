@@ -139,7 +139,7 @@ const Product = () => {
       .post(`${API_URL}/product/createCartForUser`)
       .then((res) => {
         if (res?.status == 200) {
-          console.log("MADE CART FOR USER -> ", res)
+          // console.log("MADE CART FOR USER -> ", res)
           newCartId = res?.data?.cartId
         }
         if (res?.data?.error) {
