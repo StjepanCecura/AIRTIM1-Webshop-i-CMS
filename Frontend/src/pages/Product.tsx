@@ -9,6 +9,12 @@ import Footer from "../layouts/Footer"
 import Spinner from "../components/Spinner"
 import Button from "../components/Button"
 import { IProductDetails } from "../interfaces/productDetails.interface"
+import { getShoppingCart, setShoppingCartId } from "../services/lsShoppingCart"
+import { useContext } from "react"
+import { CartContext } from "../services/CartContext"
+import { getLoginStatus } from "../services/lsLoginStatus"
+import { toast } from "react-toastify"
+
 const Product = () => {
   const { productKey, variantKey } = useParams()
   const [pageData, setPageData] = useState<IHomePage>()
@@ -17,6 +23,8 @@ const Product = () => {
   const [currentSize, setCurrentSize] = useState("")
   const [productQuantity, setProductQuantity] = useState(1)
   const [currentVariantStock, setCurrentVariantStock] = useState<number>()
+
+  const { setCardContextState } = useContext(CartContext)
 
   const navigate = useNavigate()
 
@@ -54,7 +62,7 @@ const Product = () => {
       )
       .then((res) => {
         setProductData(res.data)
-        console.log("RES -> ", res.data)
+        // console.log("RES -> ", res.data)
         setCurrentVariantStock(res.data.currentVariant.availability.quantity)
         setCurrentSize("")
         setProductQuantity(1)
@@ -86,7 +94,7 @@ const Product = () => {
     }
   }
 
-  const handleAddToCartClick = () => {
+  const getProductDetails = () => {
     let productId = productData?.id
     let quantity = productQuantity
     let variantId
@@ -100,15 +108,209 @@ const Product = () => {
         variantId = variantFound.id
       }
     }
+    return { productId, variantId, quantity }
+  }
 
-    alert(
-      "ID -> " +
-        productId +
-        ", Variant ID -> " +
-        variantId +
-        ", Quantity -> " +
-        quantity
-    )
+  const createShoppingCart = async () => {
+    startLoading()
+    const cartId = await axios
+      .post(`${API_URL}/product/createCart`)
+      .then((res) => {
+        if (res?.status == 200) {
+          return res?.data?.cartId ?? ""
+        }
+        if (res?.data?.error) {
+          console.log("createShoppingCart ERROR 1 -> ", res?.data?.error)
+        }
+      })
+      .catch((err) => {
+        console.log("createShoppingCart ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return cartId
+  }
+
+  const createCartForUser = async () => {
+    startLoading()
+    let newCartId: string | null
+    await axios
+      .post(`${API_URL}/product/createCartForUser`)
+      .then((res) => {
+        if (res?.status == 200) {
+          // console.log("MADE CART FOR USER -> ", res)
+          newCartId = res?.data?.cartId
+        }
+        if (res?.data?.error) {
+          console.log("createCartForUser ERROR 1 -> ", res?.data?.error)
+          newCartId = null
+        }
+      })
+      .catch((err) => {
+        console.log("createCartForUser ERROR 2 -> ", err)
+        newCartId = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return newCartId
+  }
+
+  const addToCartByCartId = async (
+    cartId: string,
+    cartVersion: number,
+    productId: string,
+    variantId: string,
+    quantity: number
+  ) => {
+    startLoading()
+    await axios
+      .post(`${API_URL}/product/addProductToCart`, {
+        cartId: cartId,
+        version: cartVersion,
+        productId: productId,
+        variantId: variantId,
+        quantity: quantity,
+      })
+      .then((res) => {
+        if (res?.status == 200) {
+          toast("Added to cart.")
+        }
+        if (res?.data?.error) {
+          console.log("addToCartByCartId ERROR 1 -> ", res?.data?.error)
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        console.log("addToCartByCartId ERROR 2 -> ", err)
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const getCartByUser = async () => {
+    startLoading()
+    let userCartId: string | null
+    await axios
+      .get(`${API_URL}/product/getCartByCustomerId`)
+      .then((res) => {
+        if (res?.data?.cartId === null) {
+          // User doesn't have registered cart -> make one
+          userCartId = null
+        } else {
+          userCartId = res?.data?.cartId
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        userCartId = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return userCartId
+  }
+
+  const getCartVersionByCartId = async (cartId: string) => {
+    startLoading()
+    let version: number | null
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if ((res?.data?.version ?? "") != "") {
+          version = res?.data?.version
+        } else {
+          version = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        version = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return version
+  }
+
+  const handleAddToCartClick = async () => {
+    const { productId, variantId, quantity } = getProductDetails()
+
+    const loginStatus = getLoginStatus()
+    if (loginStatus == null) {
+      // User is not logged in
+      const cartIdFromLS = getShoppingCart()
+      if (cartIdFromLS == null || cartIdFromLS == "") {
+        // Create new cart and store it into LS
+        const cartIdFromCommercetools = await createShoppingCart()
+        setShoppingCartId(cartIdFromCommercetools)
+        // Update cart by cartIdFromCommercetools
+        const cartVersion = await getCartVersionByCartId(
+          cartIdFromCommercetools
+        )
+        if (cartVersion != null) {
+          addToCartByCartId(
+            cartIdFromCommercetools,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      } else {
+        // Update cart by cartIdFromLS (add productId, variantId and quntity)
+        const cartVersion = await getCartVersionByCartId(cartIdFromLS)
+        if (cartVersion != null) {
+          addToCartByCartId(
+            cartIdFromLS,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      }
+    }
+    if (loginStatus == "true") {
+      // User is logged in
+      const userCartId = await getCartByUser()
+      if (userCartId === null) {
+        let newCartId = await createCartForUser()
+        const cartVersion = await getCartVersionByCartId(newCartId)
+        if (cartVersion != null) {
+          addToCartByCartId(
+            newCartId,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      } else {
+        const cartVersion = await getCartVersionByCartId(userCartId)
+        if (cartVersion != null) {
+          addToCartByCartId(
+            userCartId,
+            cartVersion,
+            productId,
+            variantId,
+            quantity
+          )
+        } else {
+          toast.error("Error while adding to cart. Please try again later.")
+        }
+      }
+    }
+    // Turn on colored cart icon in navbar
+    setCardContextState(true)
   }
 
   const handleVariantSizeClick = (_variantSize: string) => {
@@ -279,12 +481,20 @@ const Product = () => {
                   currentSize != "" ? "hover:cursor-pointer" : ""
                 }`}
               >
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   -
                 </p>
               </div>
               <div className="px-4 py-1 bg-tetriary">
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   {productQuantity}
                 </p>
               </div>
@@ -295,7 +505,11 @@ const Product = () => {
                   currentSize != "" ? "hover:cursor-pointer" : ""
                 }`}
               >
-                <p className={`${currentSize != "" ? "" : "text-slate-400"}`}>
+                <p
+                  className={`${
+                    currentSize != "" ? "" : "text-slate-400"
+                  } select-none`}
+                >
                   +
                 </p>
               </div>

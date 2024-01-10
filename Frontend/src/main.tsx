@@ -4,6 +4,7 @@ import App from "./App.tsx"
 import "./index.css"
 import axios from "axios"
 import { removeLoginStatus } from "./services/lsLoginStatus.tsx"
+import { CartProvider } from "./services/CartContext.tsx"
 
 axios.interceptors.request.use(
   function (config) {
@@ -34,6 +35,8 @@ axios.interceptors.response.use(
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <div className="min-h-screen flex flex-col">
-    <App />
+    <CartProvider>
+      <App />
+    </CartProvider>
   </div>
 )

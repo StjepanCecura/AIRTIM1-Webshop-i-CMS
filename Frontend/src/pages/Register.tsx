@@ -74,7 +74,7 @@ function Register() {
       .post(`${API_URL}/customer/register`, { ...formData })
       .then((res) => {
         if (res?.status == 200) {
-          toast("Account created successfully.")
+          toast("Account created successfully. Verify email to sign in.")
           navigate("/")
         }
         if (res?.data?.error) {

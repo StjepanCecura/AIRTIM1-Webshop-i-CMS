@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react"
-import { ICustomer } from "../interfaces/customer.interface"
+import { useLocation, useNavigate } from "react-router-dom"
+import Input from "../components/Input"
+import Spinner from "../components/Spinner"
 import axios from "axios"
 import { API_URL } from "../constants"
-import Spinner from "../components/Spinner"
-import Button from "../components/Button"
-import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
 import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
-import Input from "../components/Input"
+import Button from "../components/Button"
+import { ICustomer } from "../interfaces/customer.interface"
+import { getLoginStatus } from "../services/lsLoginStatus"
+import { toast } from "react-toastify"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
-const Profile = () => {
-  const [loadingStack, setLoadingStack] = useState<number[]>([])
+const Order = () => {
+  const location = useLocation()
   const navigate = useNavigate()
-  const [profileData, setProfileData] = useState<ICustomer>({
+
+  const [loadingStack, setLoadingStack] = useState<number[]>([])
+  const [cartId, setCartId] = useState("")
+  const [cartVersion, setCartVersion] = useState<number>()
+  const [cartTotal, setCartTotal] = useState()
+  const [orderData, setOrderData] = useState<ICustomer>({
     id: "",
     firstName: "",
     lastName: "",
@@ -29,7 +35,6 @@ const Profile = () => {
     streetNumber: "",
   })
   const [country, setCountry] = useState<ISelect>()
-  const [userHasAddress, setUserHasAddress] = useState(false)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -39,19 +44,33 @@ const Profile = () => {
     setLoadingStack((prev) => prev.slice(0, -1))
   }
 
+  const getCartVersionByCartId = async (cartId: string) => {
+    startLoading()
+    let version: number | null
+    await axios
+      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if ((res?.data?.version ?? "") != "") {
+          version = res?.data?.version
+        } else {
+          version = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        version = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    setCartVersion(version)
+  }
+
   const getCustomerData = async () => {
     startLoading()
     await axios
       .get(`${API_URL}/customer`)
       .then((res) => {
-        if (
-          res?.data?.userData?.address === undefined ||
-          res?.data?.userData?.address === null
-        ) {
-          setUserHasAddress(false)
-        } else {
-          setUserHasAddress(true)
-        }
         const id = res?.data?.userData?.id ?? ""
         const firstName = res?.data?.userData?.firstName ?? ""
         const lastName = res?.data?.userData?.lastName ?? ""
@@ -64,7 +83,7 @@ const Profile = () => {
         const streetName = res?.data?.userData?.address?.streetName ?? ""
         const streetNumber = res?.data?.userData?.address?.streetNumber ?? ""
 
-        setProfileData({
+        setOrderData({
           id: id,
           firstName: firstName,
           lastName: lastName,
@@ -83,16 +102,9 @@ const Profile = () => {
         }
       })
       .catch((err) => {
-        if (err?.response?.status != 403) {
-          toast.error("Error loading profile. Please try again later.")
-          navigate("/")
+        if (err?.response.status != 403) {
+          console.log("403 -> Order")
         }
-        // if (err?.response.status == 403) {
-        //   navigate("/login")
-        // } else {
-        //   toast.error("Error loading profile. Please try again later.")
-        //   navigate("/login")
-        // }
       })
       .finally(() => {
         stopLoading()
@@ -100,32 +112,41 @@ const Profile = () => {
   }
 
   const handleChange = (
-    key: keyof typeof profileData,
+    key: keyof typeof orderData,
     value: number | string | boolean
   ) => {
-    setProfileData({
-      ...profileData,
+    setOrderData({
+      ...orderData,
       [key]: value,
     })
   }
 
-  const updateCustomerData = async () => {
+  const addShippingDetailsToCart = async () => {
     startLoading()
     await axios
-      .put(`${API_URL}/customer/changeCustomerAddress`, {
-        addressId: profileData.addressId,
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        phoneNumber: profileData.phoneNumber,
-        country: profileData.country,
-        city: profileData.city,
-        postalCode: profileData.postalCode,
-        streetName: profileData.streetName,
-        streetNumber: profileData.streetNumber,
+      .post(`${API_URL}/product/addShippingAddress`, {
+        cartId: cartId,
+        version: cartVersion,
+        firstName: orderData.firstName,
+        lastName: orderData.lastName,
+        email: orderData.email,
+        phone: orderData.phoneNumber,
+        country: orderData.country,
+        city: orderData.city,
+        postalCode: orderData.postalCode,
+        streetName: orderData.streetName,
+        streetNumber: orderData.streetNumber,
       })
       .then((res) => {
         if (res?.status == 200) {
-          if (res?.data?.success == true) toast("Changes saved successfully.")
+          if (res?.data?.success == true) {
+            navigate("/order-payment", {
+              state: {
+                cartTotal: cartTotal,
+                cartId: cartId,
+              },
+            })
+          }
         }
         if (res?.data?.error) {
           toast.error("Error while saving changes. Please try again later.")
@@ -139,52 +160,54 @@ const Profile = () => {
       })
   }
 
-  const addCustomerData = async () => {
-    startLoading()
-    await axios
-      .post(`${API_URL}/customer/addCustomerAddress`, {
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        phoneNumber: profileData.phoneNumber,
-        country: profileData.country,
-        city: profileData.city,
-        postalCode: profileData.postalCode,
-        streetName: profileData.streetName,
-        streetNumber: profileData.streetNumber,
-      })
-      .then((res) => {
-        if (res?.status == 200) {
-          if (res?.data?.success == true) toast("Changes saved successfully.")
-        }
-        if (res?.data?.error) {
-          toast.error("Error while saving changes. Please try again later.")
-        }
-      })
-      .catch((err) => {
-        toast.error("Error while saving changes. Please try again later.")
-      })
-      .finally(() => {
-        stopLoading()
-      })
+  const verifyShippingDetails = () => {
+    let error = false
+    if (orderData.firstName == "") error = true
+    if (orderData.lastName == "") error = true
+    if (orderData.email == "") error = true
+    if (orderData.phoneNumber == "") error = true
+    if (orderData.city == "") error = true
+    if (orderData.country == "") error = true
+    if (orderData.postalCode == "") error = true
+    if (orderData.streetName == "") error = true
+    if (orderData.streetNumber == "") error = true
+    return error
   }
 
-  const handleSaveChangesClick = () => {
-    if (userHasAddress) {
-      updateCustomerData()
+  const handleGoToNextStep = () => {
+    const verifyError = verifyShippingDetails()
+    if (verifyError === true) {
+      toast("Please enter all shipping details.")
     } else {
-      addCustomerData()
+      addShippingDetailsToCart()
     }
   }
 
   useEffect(() => {
-    getCustomerData()
+    const loginStatus = getLoginStatus()
+    if (loginStatus == "true") getCustomerData()
     return () => {}
   }, [])
 
   useEffect(() => {
+    if (location != undefined) {
+      setCartId(location.state.cartId)
+      setCartTotal(location.state.cartTotal)
+    }
+
+    return () => {}
+  }, [location])
+
+  useEffect(() => {
+    if (cartId != undefined && cartId != "" && cartId != null)
+      getCartVersionByCartId(cartId)
+    return () => {}
+  }, [cartId])
+
+  useEffect(() => {
     if (country != undefined && country != null) {
-      setProfileData({
-        ...profileData,
+      setOrderData({
+        ...orderData,
         country: country.value,
       })
     }
@@ -192,15 +215,9 @@ const Profile = () => {
     return () => {}
   }, [country])
 
-  useEffect(() => {
-    //console.log(profileData)
-
-    return () => {}
-  }, [profileData])
-
   if (loadingStack.length > 0) {
     return (
-      <div className="flex flex-1 justify-center items-center">
+      <div className="flex justify-center items-center flex-1">
         <Spinner />
       </div>
     )
@@ -208,8 +225,13 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col px-8 gap-8 mb-8">
-      <p className="text-center text-[36px] font-semibold pt-8">Profile</p>
+      <p className="text-center text-[36px] font-semibold pt-8">
+        Shipping Details
+      </p>
       <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+        {/* <p>{cartId}</p>
+        <p>{cartTotal}</p>
+        <hr /> */}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="flex flex-col justify-start w-full">
@@ -218,7 +240,7 @@ const Profile = () => {
                 type="text"
                 placeholder="First name"
                 onChange={(e) => handleChange("firstName", e.target.value)}
-                value={profileData.firstName}
+                value={orderData.firstName}
               />
             </div>
             <div className="flex flex-col justify-start w-full">
@@ -227,19 +249,17 @@ const Profile = () => {
                 type="text"
                 placeholder="Last name"
                 onChange={(e) => handleChange("lastName", e.target.value)}
-                value={profileData.lastName}
+                value={orderData.lastName}
               />
             </div>
           </div>
           <div className="flex flex-col justify-start">
             <p>Email:</p>
             <Input
-              disabled
               type="text"
               placeholder="Email"
-              // onChange={(e) => handleChange("email", e.target.value)}
-              onChange={() => {}}
-              value={profileData.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              value={orderData.email}
             />
           </div>
           <div className="flex flex-col justify-start">
@@ -248,7 +268,7 @@ const Profile = () => {
               type="text"
               placeholder="Phone"
               onChange={(e) => handleChange("phoneNumber", e.target.value)}
-              value={profileData.phoneNumber}
+              value={orderData.phoneNumber}
             />
           </div>
           <div className="flex flex-col justify-start">
@@ -266,7 +286,7 @@ const Profile = () => {
               type="text"
               placeholder="Postal code"
               onChange={(e) => handleChange("postalCode", e.target.value)}
-              value={profileData.postalCode}
+              value={orderData.postalCode}
             />
           </div>
           <div className="flex flex-col justify-start">
@@ -275,7 +295,7 @@ const Profile = () => {
               type="text"
               placeholder="City"
               onChange={(e) => handleChange("city", e.target.value)}
-              value={profileData.city}
+              value={orderData.city}
             />
           </div>
           <div className="flex flex-col md:flex-row gap-2">
@@ -285,7 +305,7 @@ const Profile = () => {
                 type="text"
                 placeholder="Street name"
                 onChange={(e) => handleChange("streetName", e.target.value)}
-                value={profileData.streetName}
+                value={orderData.streetName}
               />
             </div>
             <div className="flex flex-col justify-start w-full">
@@ -294,17 +314,14 @@ const Profile = () => {
                 type="text"
                 placeholder="Street number"
                 onChange={(e) => handleChange("streetNumber", e.target.value)}
-                value={profileData.streetNumber}
+                value={orderData.streetNumber}
               />
             </div>
           </div>
         </div>
         <div className="flex justify-center w-full mt-8">
           <div className="w-[500px]">
-            <Button
-              text="Save changes"
-              onClick={() => handleSaveChangesClick()}
-            />
+            <Button text="Go to payment" onClick={() => handleGoToNextStep()} />
           </div>
         </div>
       </div>
@@ -312,4 +329,4 @@ const Profile = () => {
   )
 }
 
-export default Profile
+export default Order
