@@ -168,12 +168,36 @@ const Profile = () => {
       })
   }
 
+  const deleteAccount = async () => {
+    startLoading()
+    await axios
+      .delete(`${API_URL}/customer/deleteAccount`)
+      .then((res) => {
+        if (res?.status == 200) {
+          if (res?.data?.success == true) toast("Account deleted successfully.")
+        }
+        if (res?.data?.error) {
+          toast.error("Error while deleting account. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while deleting account. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const handleSaveChangesClick = () => {
     if (userHasAddress) {
       updateCustomerData()
     } else {
       addCustomerData()
     }
+  }
+
+  const handleDeleteAccountClick = () => {
+    // deleteAccount()
   }
 
   useEffect(() => {
@@ -299,11 +323,18 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center w-full mt-8">
+        <div className="flex-col justify-center items-center mt-8">
           <div className="w-[500px]">
             <Button
               text="Save changes"
               onClick={() => handleSaveChangesClick()}
+            />
+          </div>
+          <div className="w-[500px] mt-8">
+            <Button
+              danger
+              text="Delete account"
+              onClick={() => handleDeleteAccountClick()}
             />
           </div>
         </div>

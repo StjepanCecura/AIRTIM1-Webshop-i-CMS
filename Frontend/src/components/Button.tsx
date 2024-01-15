@@ -4,6 +4,7 @@ interface Props {
   onClick: () => void
   loading?: boolean
   disabled?: boolean
+  danger?: boolean
 }
 
 const Button = ({
@@ -11,11 +12,18 @@ const Button = ({
   onClick,
   disabled = false,
   loading = false,
+  danger = false,
 }: Props) => {
   loading ? (disabled = true) : null // Auto disable when loading
-  const buttonColor = disabled ? "bg-slate-500" : "bg-primary"
+  const buttonColor = disabled
+    ? "bg-slate-500"
+    : danger
+    ? "bg-red-500"
+    : "bg-primary"
   const buttonHoverColor = disabled
     ? "hover:bg-slate-500"
+    : danger
+    ? "hover:bg-red-400"
     : "hover:bg-secondary"
   const buttonHoverCursor = disabled
     ? "hover:cursor-default"
