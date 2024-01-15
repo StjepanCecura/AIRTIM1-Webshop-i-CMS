@@ -24,7 +24,7 @@ const EmailVerification = () => {
       .put(`${API_URL}/customer/email-verification`, { id: id })
       .then((res) => {
         if (res?.status == 200) {
-          navigate("/")
+          // navigate("/")
         }
       })
       .catch((err) => {

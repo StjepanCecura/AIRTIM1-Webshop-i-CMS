@@ -10,7 +10,7 @@ import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Input from "../components/Input"
 import { Modal } from "flowbite-react"
-import { removeLoginStatus } from "../services/lsLoginStatus"
+import { setLoginStatus } from "../services/lsLoginStatus"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -86,16 +86,11 @@ const Profile = () => {
         }
       })
       .catch((err) => {
+        console.log("ERR -> ", err)
         if (err?.response?.status != 403) {
           toast.error("Error loading profile. Please try again later.")
           navigate("/")
         }
-        // if (err?.response.status == 403) {
-        //   navigate("/login")
-        // } else {
-        //   toast.error("Error loading profile. Please try again later.")
-        //   navigate("/login")
-        // }
       })
       .finally(() => {
         stopLoading()
@@ -180,7 +175,7 @@ const Profile = () => {
           if (res?.data?.success == true) {
             toast("Account deleted successfully.")
             setOpenModal(false)
-            removeLoginStatus()
+            setLoginStatus(false)
             navigate("/")
           } else {
             toast.error("Error while deleting account. Please try again later.")

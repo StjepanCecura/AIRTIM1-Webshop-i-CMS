@@ -55,12 +55,13 @@ function Login() {
         }
       })
       .catch((err) => {
-        if (err?.response.status == 401) {
+        console.log("ERR ->  ", err)
+        if (err?.response?.status == 401) {
           // Wrong credentials
           const errorMessage = err?.response?.data?.message
           setPasswordError(errorMessage)
           setEmailError(errorMessage)
-        } else if (err?.response.status == 406) {
+        } else if (err?.response?.status == 406) {
           // Email not verified
           const errorMessage = err?.response?.data?.message
           setEmailError(errorMessage)

@@ -207,7 +207,7 @@ const Navbar = () => {
       .get(`${API_URL}/customer/sign-out`)
       .then((res) => {})
       .catch((err) => {
-        if (err?.response.status != 403) {
+        if (err?.response?.status != 403) {
           toast.error("Error signing out. Please try again later.")
         }
       })

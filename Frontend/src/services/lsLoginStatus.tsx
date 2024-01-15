@@ -3,6 +3,7 @@ export const getLoginStatus = () => {
 }
 
 export const setLoginStatus = (status: boolean) => {
+  console.log("TU SAM - > ", status)
   localStorage.setItem("loginStatus", "" + status)
 }
 
