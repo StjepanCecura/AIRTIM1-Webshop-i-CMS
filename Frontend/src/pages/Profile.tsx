@@ -9,6 +9,8 @@ import { toast } from "react-toastify"
 import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Input from "../components/Input"
+import { Modal } from "flowbite-react"
+import { removeLoginStatus } from "../services/lsLoginStatus"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -30,6 +32,7 @@ const Profile = () => {
   })
   const [country, setCountry] = useState<ISelect>()
   const [userHasAddress, setUserHasAddress] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -175,6 +178,9 @@ const Profile = () => {
       .then((res) => {
         if (res?.status == 200) {
           if (res?.data?.success == true) toast("Account deleted successfully.")
+          setOpenModal(false)
+          removeLoginStatus()
+          navigate("/")
         }
         if (res?.data?.error) {
           toast.error("Error while deleting account. Please try again later.")
@@ -197,7 +203,7 @@ const Profile = () => {
   }
 
   const handleDeleteAccountClick = () => {
-    // deleteAccount()
+    setOpenModal(true)
   }
 
   useEffect(() => {
@@ -323,14 +329,14 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="flex-col justify-center items-center mt-8">
-          <div className="w-[500px]">
+        <div className="flex-col justify-center items-center mt-8 w-full">
+          <div className="w-full">
             <Button
               text="Save changes"
               onClick={() => handleSaveChangesClick()}
             />
           </div>
-          <div className="w-[500px] mt-8">
+          <div className="w-full mt-8">
             <Button
               danger
               text="Delete account"
@@ -339,6 +345,25 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <Modal
+        show={openModal}
+        size="md"
+        onClose={() => setOpenModal(false)}
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button danger text="Yes" onClick={() => deleteAccount()} />
+              <Button text="No" onClick={() => setOpenModal(false)} />
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }
