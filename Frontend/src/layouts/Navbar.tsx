@@ -16,12 +16,14 @@ import LogoPNG from "../assets/air-express-logo.png"
 import { CartContext } from "../services/CartContext"
 import { useContext } from "react"
 import { getShoppingCart } from "../services/lsShoppingCart"
+import SupportSVG from "../assets/support.svg"
 interface Props {
   loginStatus: string
   handleSignOutClick: () => void
   handleProfileClick: () => void
   handleSignInClick: () => void
   handleCartClick: () => void
+  handleSupportClick: () => void
   routes: any
   cartExists: boolean
 }
@@ -32,6 +34,7 @@ const NavbarDesktop = ({
   handleProfileClick,
   handleSignInClick,
   handleCartClick,
+  handleSupportClick,
   routes,
   cartExists,
 }: Props) => {
@@ -53,6 +56,13 @@ const NavbarDesktop = ({
         })}
       </div>
       <div className="flex flex-row items-center gap-6">
+        {loginStatus ? (
+          <img
+            src={SupportSVG}
+            className="h-7 hover:cursor-pointer"
+            onClick={handleSupportClick}
+          />
+        ) : null}
         {cartExists ? (
           <img
             src={CartActiveSVG}
@@ -98,6 +108,7 @@ const NavbarMobile = ({
   handleProfileClick,
   handleSignInClick,
   handleCartClick,
+  handleSupportClick,
   routes,
   cartExists,
 }: Props) => {
@@ -116,6 +127,13 @@ const NavbarMobile = ({
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
+          {loginStatus ? (
+            <img
+              src={SupportSVG}
+              className="h-7 hover:cursor-pointer"
+              onClick={handleSupportClick}
+            />
+          ) : null}
           {cartExists ? (
             <img
               src={CartActiveSVG}
@@ -229,6 +247,10 @@ const Navbar = () => {
     navigate("/shopping-cart")
   }
 
+  const handleSupportClick = () => {
+    navigate("/customer-support")
+  }
+
   const getNavigationEntries = async () => {
     setIsLoading(true)
     await axios
@@ -329,6 +351,7 @@ const Navbar = () => {
     <>
       <NavbarDesktop
         loginStatus={loginStatus}
+        handleSupportClick={handleSupportClick}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
@@ -339,6 +362,7 @@ const Navbar = () => {
       <NavbarMobile
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
+        handleSupportClick={handleSupportClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
         handleCartClick={handleCartClick}
