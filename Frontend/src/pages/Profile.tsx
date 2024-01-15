@@ -177,10 +177,14 @@ const Profile = () => {
       .delete(`${API_URL}/customer/deleteAccount`)
       .then((res) => {
         if (res?.status == 200) {
-          if (res?.data?.success == true) toast("Account deleted successfully.")
-          setOpenModal(false)
-          removeLoginStatus()
-          navigate("/")
+          if (res?.data?.success == true) {
+            toast("Account deleted successfully.")
+            setOpenModal(false)
+            removeLoginStatus()
+            navigate("/")
+          } else {
+            toast.error("Error while deleting account. Please try again later.")
+          }
         }
         if (res?.data?.error) {
           toast.error("Error while deleting account. Please try again later.")
