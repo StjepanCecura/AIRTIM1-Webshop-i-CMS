@@ -34,7 +34,7 @@ const CustomerSupport = () => {
   const sendMessage = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/customer/support`, {
+      .post(`${API_URL}/mail/support`, {
         title: messageData.title,
         body: messageData.body,
       })
@@ -58,7 +58,7 @@ const CustomerSupport = () => {
     if (messageData.title == "" || messageData.body == "") {
       toast("Please enter all data.")
     } else {
-      //sendMessage()
+      sendMessage()
     }
   }
 
