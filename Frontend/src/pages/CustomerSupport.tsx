@@ -41,6 +41,7 @@ const CustomerSupport = () => {
       .then((res) => {
         if (res?.status == 200) {
           if (res?.data?.success == true) toast("Message sent successfully.")
+          setMessageData({ title: "", body: "" })
         }
         if (res?.data?.error) {
           toast.error("Error while sending message. Please try again later.")
