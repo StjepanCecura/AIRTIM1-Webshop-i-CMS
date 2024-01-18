@@ -13,6 +13,7 @@ import Product from "./pages/Product"
 import ShoppingCart from "./pages/ShoppingCart"
 import Order from "./pages/Order"
 import OrderPayment from "./pages/OrderPayment"
+import CustomerSupport from "./pages/CustomerSupport"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/order" element={<Order />} />
           <Route path="/order-payment" element={<OrderPayment />} />
+          <Route path="/customer-support" element={<CustomerSupport />} />
           <Route
             path="/email-verification/:id"
             element={<EmailVerification />}
