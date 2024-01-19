@@ -48,7 +48,7 @@ const Order = () => {
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version
@@ -124,7 +124,7 @@ const Order = () => {
   const addShippingDetailsToCart = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/product/addShippingAddress`, {
+      .post(`${API_URL}/receipts/addShippingAddress`, {
         cartId: cartId,
         version: cartVersion,
         firstName: orderData.firstName,

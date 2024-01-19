@@ -46,7 +46,7 @@ const OrderPayment = () => {
   const makeOrder = async (_cartVersion: number) => {
     startLoading()
     let success = await axios
-      .post(`${API_URL}/product/createOrder`, {
+      .post(`${API_URL}/receipts/createOrder`, {
         cartId: cartId,
         version: _cartVersion,
       })
@@ -77,7 +77,7 @@ const OrderPayment = () => {
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version

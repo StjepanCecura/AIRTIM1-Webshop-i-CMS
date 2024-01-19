@@ -114,7 +114,7 @@ const Product = () => {
   const createShoppingCart = async () => {
     startLoading()
     const cartId = await axios
-      .post(`${API_URL}/product/createCart`)
+      .post(`${API_URL}/receipts/createCart`)
       .then((res) => {
         if (res?.status == 200) {
           return res?.data?.cartId ?? ""
@@ -136,7 +136,7 @@ const Product = () => {
     startLoading()
     let newCartId: string | null
     await axios
-      .post(`${API_URL}/product/createCartForUser`)
+      .post(`${API_URL}/receipts/createCartForUser`)
       .then((res) => {
         if (res?.status == 200) {
           // console.log("MADE CART FOR USER -> ", res)
@@ -166,7 +166,7 @@ const Product = () => {
   ) => {
     startLoading()
     await axios
-      .post(`${API_URL}/product/addProductToCart`, {
+      .post(`${API_URL}/receipts/addProductToCart`, {
         cartId: cartId,
         version: cartVersion,
         productId: productId,
@@ -194,7 +194,7 @@ const Product = () => {
     startLoading()
     let userCartId: string | null
     await axios
-      .get(`${API_URL}/product/getCartByCustomerId`)
+      .get(`${API_URL}/receipts/getCartByCustomerId`)
       .then((res) => {
         if (res?.data?.cartId === null) {
           // User doesn't have registered cart -> make one
@@ -217,7 +217,7 @@ const Product = () => {
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version

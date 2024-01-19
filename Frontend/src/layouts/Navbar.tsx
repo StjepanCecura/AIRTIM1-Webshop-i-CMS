@@ -277,7 +277,7 @@ const Navbar = () => {
 
   const getCartByCartId = async (cartId: string) => {
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if (res?.data?.products.length > 0) {
           setCartExists(true)
@@ -294,7 +294,7 @@ const Navbar = () => {
   const getCartIdByUser = async () => {
     let id: string | null
     await axios
-      .get(`${API_URL}/product/getCartByCustomerId`)
+      .get(`${API_URL}/receipts/getCartByCustomerId`)
       .then((res) => {
         id = res?.data?.cartId
       })

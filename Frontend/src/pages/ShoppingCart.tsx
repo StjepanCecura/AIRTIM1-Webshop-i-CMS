@@ -34,7 +34,7 @@ const ShoppingCart = () => {
   const getCartByCartId = async (cartId: string) => {
     startLoading()
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if (res?.data?.products.length > 0) {
           setCartEmpty(false)
@@ -55,7 +55,7 @@ const ShoppingCart = () => {
   const createCartForUser = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/product/createCartForUser`)
+      .post(`${API_URL}/receipts/createCartForUser`)
       .then((res) => {
         if (res?.status == 200) {
         }
@@ -74,7 +74,7 @@ const ShoppingCart = () => {
   const getCartByUser = async () => {
     startLoading()
     await axios
-      .get(`${API_URL}/product/getCartByCustomerId`)
+      .get(`${API_URL}/receipts/getCartByCustomerId`)
       .then((res) => {
         // console.log("RES USER -> ", res)
         if (res?.data?.cartId === null) {
