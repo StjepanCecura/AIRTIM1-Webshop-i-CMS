@@ -27,8 +27,8 @@ const ProductsList = ({
   const [gender, setGender] = useState<ISelect>()
 
   const genderOptions = [
-    { value: "cc5f4765-2fe1-4284-b70a-99953de2acc1", label: "Men" },
-    { value: "c318d0ec-b658-4be2-bd28-d582e2bcee54", label: "Women" },
+    { value: "40c8c3de-8805-4b73-bbdf-ee4d0b04fb7a", label: "Men" },
+    { value: "f5682067-5806-4a3c-a3a8-0278db216537", label: "Women" },
     { value: categoryId, label: "All" },
   ]
 
@@ -88,6 +88,7 @@ const ProductsList = ({
     await axios
       .get(GET_URL)
       .then((res) => {
+        console.log("RES -> ", res.data)
         setPagination(res.data.pagination)
         setProducts(res.data.products)
       })
