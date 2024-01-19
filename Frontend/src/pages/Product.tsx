@@ -462,7 +462,7 @@ const Product = () => {
                     className="w-[100px] h-[100px] bg-tetriary hover:cursor-pointer flex justify-center items-center"
                     onClick={() => handleVariantClick(variant.variantKey)}
                   >
-                    <img src={`${variant.images[0].url}`} />
+                    <img src={`${variant?.images[0]?.url}`} />
                   </div>
                 )
               })}
