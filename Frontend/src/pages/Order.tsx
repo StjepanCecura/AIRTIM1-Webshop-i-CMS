@@ -10,6 +10,7 @@ import Button from "../components/Button"
 import { ICustomer } from "../interfaces/customer.interface"
 import { getLoginStatus } from "../services/lsLoginStatus"
 import { toast } from "react-toastify"
+import { ICartProduct } from "../interfaces/cartProduct.interface"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -35,6 +36,7 @@ const Order = () => {
     streetNumber: "",
   })
   const [country, setCountry] = useState<ISelect>()
+  const [cartProducts, setCartProducts] = useState<Array<ICartProduct>>()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -140,12 +142,12 @@ const Order = () => {
       .then((res) => {
         if (res?.status == 200) {
           if (res?.data?.success == true) {
-            navigate("/order-payment", {
-              state: {
-                cartTotal: cartTotal,
-                cartId: cartId,
-              },
-            })
+            // navigate("/order-payment", {
+            //   state: {
+            //     cartTotal: cartTotal,
+            //     cartId: cartId,
+            //   },
+            // })
           }
         }
         if (res?.data?.error) {
@@ -174,12 +176,39 @@ const Order = () => {
     return error
   }
 
+  const getCartByCartId = async (cartId: string) => {
+    startLoading()
+    let cartProducts: Array<ICartProduct> | null
+    await axios
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if (res?.data?.products.length > 0) {
+          cartProducts = res?.data?.products
+        } else {
+          cartProducts = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        cartProducts = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return cartProducts
+  }
+
+  const startPaymentProcess = async () => {
+    const cartProducts = await getCartByCartId(cartId)
+  }
+
   const handleGoToNextStep = () => {
     const verifyError = verifyShippingDetails()
     if (verifyError === true) {
       toast("Please enter all shipping details.")
     } else {
       addShippingDetailsToCart()
+      startPaymentProcess()
     }
   }
 
