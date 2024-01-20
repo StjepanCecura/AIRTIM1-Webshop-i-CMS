@@ -216,10 +216,15 @@ const Order = () => {
       body: JSON.stringify(body),
     })
     const session = await response.json()
+    console.log("SESSTION -> ", session)
 
-    const result = stripe.redirectToCheckout({
-      sessionId: session.id,
-    })
+    if (session.id != null) {
+      const result = stripe.redirectToCheckout({
+        sessionId: session.id,
+      })
+    } else {
+      toast.error("Error. Please try again later.")
+    }
   }
 
   const startPaymentProcess = async () => {
