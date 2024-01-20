@@ -210,10 +210,11 @@ const Order = () => {
     const headers = {
       "Content-Type": "application/json",
     }
-    const response = await fetch(
-      `${API_URL}/receipts/create-checkout-session`,
-      { method: "POST", headers: headers, body: JSON.stringify(body) }
-    )
+    const response = await fetch(`${API_URL}/receipts/createCheckoutSession`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    })
     const session = await response.json()
 
     const result = stripe.redirectToCheckout({
