@@ -198,8 +198,15 @@ const Order = () => {
     return cartProducts
   }
 
+  const makePayment = async () => {
+    const stripe = await loadStripe("")
+  }
+
   const startPaymentProcess = async () => {
     const cartProducts = await getCartByCartId(cartId)
+    if (cartProducts != null && cartProducts.length > 0) {
+      makePayment()
+    }
   }
 
   const handleGoToNextStep = () => {
