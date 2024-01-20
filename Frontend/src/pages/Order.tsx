@@ -11,6 +11,7 @@ import { ICustomer } from "../interfaces/customer.interface"
 import { getLoginStatus } from "../services/lsLoginStatus"
 import { toast } from "react-toastify"
 import { ICartProduct } from "../interfaces/cartProduct.interface"
+import { loadStripe } from "@stripe/stripe-js"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -198,14 +199,32 @@ const Order = () => {
     return cartProducts
   }
 
-  const makePayment = async () => {
-    const stripe = await loadStripe("")
+  const makePayment = async (cartProducts: Array<ICartProduct>) => {
+    const stripe = await loadStripe(
+      "pk_test_51OaaSWJBVMfA4T8SROWZEc1uKiO6OsN0Yxf0tguDPCyEcBj6SNQ5NwNJ9tiwbxDRJ8IbVzFojxEGRp4k9io7UNev00B2BPGOBj"
+    )
+
+    const body = {
+      products: cartProducts,
+    }
+    const headers = {
+      "Content-Type": "application/json",
+    }
+    const response = await fetch(
+      `${API_URL}/receipts/create-checkout-session`,
+      { method: "POST", headers: headers, body: JSON.stringify(body) }
+    )
+    const session = await response.json()
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    })
   }
 
   const startPaymentProcess = async () => {
     const cartProducts = await getCartByCartId(cartId)
     if (cartProducts != null && cartProducts.length > 0) {
-      makePayment()
+      makePayment(cartProducts)
     }
   }
 
