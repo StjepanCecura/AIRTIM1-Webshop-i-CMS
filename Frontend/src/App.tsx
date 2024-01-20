@@ -15,7 +15,7 @@ import Order from "./pages/Order"
 import OrderPayment from "./pages/OrderPayment"
 import CustomerSupport from "./pages/CustomerSupport"
 import PaymentSuccess from "./pages/PaymentSuccess"
-import PaymentError from "./pages/PaymentError"
+import PaymentCancel from "./pages/PaymentCancel"
 
 function App() {
   return (
@@ -41,7 +41,7 @@ function App() {
           />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment-error" element={<PaymentError />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
         </Routes>
         <ToastContainer
           position="top-right"

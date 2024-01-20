@@ -238,7 +238,7 @@ const Profile = () => {
   return (
     <div className="flex flex-col px-8 gap-8 mb-8">
       <p className="text-center text-[36px] font-semibold pt-8">Profile</p>
-      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+      <div className="flex flex-col gap-2 justify-center items-center md:px-[20%] lg:px-[20%]">
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="flex flex-col justify-start w-full">

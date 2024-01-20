@@ -290,7 +290,7 @@ const Order = () => {
       <p className="text-center text-[36px] font-semibold pt-8">
         Shipping Details
       </p>
-      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+      <div className="flex flex-col gap-2 justify-center items-center md:px-[20%] lg:px-[20%]">
         {/* <p>{cartId}</p>
         <p>{cartTotal}</p>
         <hr /> */}
