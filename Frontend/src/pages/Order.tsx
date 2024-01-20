@@ -200,6 +200,7 @@ const Order = () => {
   }
 
   const makePayment = async (cartProducts: Array<ICartProduct>) => {
+    startLoading()
     const stripe = await loadStripe(
       "pk_test_51OaaSWJBVMfA4T8SROWZEc1uKiO6OsN0Yxf0tguDPCyEcBj6SNQ5NwNJ9tiwbxDRJ8IbVzFojxEGRp4k9io7UNev00B2BPGOBj"
     )
@@ -216,7 +217,6 @@ const Order = () => {
       body: JSON.stringify(body),
     })
     const session = await response.json()
-    console.log("SESSTION -> ", session)
 
     if (session.id != null) {
       const result = stripe.redirectToCheckout({
@@ -225,6 +225,7 @@ const Order = () => {
     } else {
       toast.error("Error. Please try again later.")
     }
+    stopLoading()
   }
 
   const startPaymentProcess = async () => {
