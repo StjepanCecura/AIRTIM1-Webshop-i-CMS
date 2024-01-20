@@ -24,7 +24,7 @@ const Product = () => {
   const [productQuantity, setProductQuantity] = useState(1)
   const [currentVariantStock, setCurrentVariantStock] = useState<number>()
 
-  const { setCardContextState } = useContext(CartContext)
+  const { setCartContextState } = useContext(CartContext)
 
   const navigate = useNavigate()
 
@@ -310,7 +310,7 @@ const Product = () => {
       }
     }
     // Turn on colored cart icon in navbar
-    setCardContextState(true)
+    setCartContextState(true)
   }
 
   const handleVariantSizeClick = (_variantSize: string) => {

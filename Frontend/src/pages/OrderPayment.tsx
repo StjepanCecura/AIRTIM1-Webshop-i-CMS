@@ -23,7 +23,7 @@ const OrderPayment = () => {
     expireDate: "",
     cvv: "",
   })
-  const { setCardContextState } = useContext(CartContext)
+  const { setCartContextState } = useContext(CartContext)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -98,7 +98,7 @@ const OrderPayment = () => {
   const handleFinishOrder = async () => {
     const _cartVersion = await getCartVersionByCartId()
     const orderSuccess = await makeOrder(_cartVersion)
-    orderSuccess ? setCardContextState(false) : setCardContextState(true)
+    orderSuccess ? setCartContextState(false) : setCartContextState(true)
     const loginStatus = getLoginStatus()
     if (loginStatus != "true") {
       removeShoppingCartId()

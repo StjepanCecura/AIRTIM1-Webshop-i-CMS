@@ -21,7 +21,7 @@ const ShoppingCart = () => {
 
   const navigate = useNavigate()
 
-  const { setCardContextState } = useContext(CartContext)
+  const { setCartContextState } = useContext(CartContext)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -125,9 +125,9 @@ const ShoppingCart = () => {
 
   useEffect(() => {
     if (cartEmpty === true) {
-      setCardContextState(false)
+      setCartContextState(false)
     } else {
-      setCardContextState(true)
+      setCartContextState(true)
     }
 
     return () => {}
@@ -161,7 +161,7 @@ const ShoppingCart = () => {
         {cartProducts.map((product) => {
           return (
             <CartProduct
-              key={product.productId}
+              key={product.variantKey}
               getCartByCartId={getCartByCartId}
               productData={product}
               loginStatus={loginStatus}

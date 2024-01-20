@@ -333,7 +333,6 @@ const Navbar = () => {
   }, [loginStatus])
 
   useEffect(() => {
-    console.log("CHANGING STATE TO -> ", cartContextState)
     if (cartContextState != null && cartContextState != undefined) {
       setCartExists(cartContextState)
     }

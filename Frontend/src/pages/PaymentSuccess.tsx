@@ -17,7 +17,7 @@ import Spinner from "../components/Spinner"
 const PaymentSuccess = () => {
   const navigate = useNavigate()
 
-  const { setCardContextState } = useContext(CartContext)
+  const { setCartContextState } = useContext(CartContext)
   const [loadingStack, setLoadingStack] = useState<number[]>([])
 
   const startLoading = () => {
@@ -130,17 +130,20 @@ const PaymentSuccess = () => {
     startLoading()
     const cartId = await getCartId()
     const _cartVersion = await getCartVersionByCartId(cartId)
-    console.log("VERSION -> ", _cartVersion)
-    console.log("ID -> ", cartId)
     const orderSuccess = await makeOrder(cartId, _cartVersion)
     if (orderSuccess) {
       toast("Order placed successfully.")
       const _cartVersion = await getCartVersionByCartId(cartId)
       deleteCart(cartId, _cartVersion)
       setShoppingCartId(null)
-      setCardContextState(false)
+      setTimeout(() => {
+        setCartContextState(true)
+      }, 0)
+      setTimeout(() => {
+        setCartContextState(false)
+      }, 1)
     } else {
-      setCardContextState(true)
+      setCartContextState(true)
     }
     const loginStatus = getLoginStatus()
     if (loginStatus != "true") {
