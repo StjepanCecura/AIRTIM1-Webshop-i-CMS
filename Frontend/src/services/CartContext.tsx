@@ -6,12 +6,12 @@ const CartContext = createContext(null)
 const CartProvider = ({ children }) => {
   const [cartContextState, setCartContext] = useState(false)
 
-  const setCardContextState = (state: boolean) => {
+  const setCartContextState = (state: boolean) => {
     setCartContext(state)
   }
 
   return (
-    <CartContext.Provider value={{ cartContextState, setCardContextState }}>
+    <CartContext.Provider value={{ cartContextState, setCartContextState }}>
       {children}
     </CartContext.Provider>
   )

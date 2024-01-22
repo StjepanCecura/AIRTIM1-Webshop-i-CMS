@@ -10,6 +10,8 @@ import Button from "../components/Button"
 import { ICustomer } from "../interfaces/customer.interface"
 import { getLoginStatus } from "../services/lsLoginStatus"
 import { toast } from "react-toastify"
+import { ICartProduct } from "../interfaces/cartProduct.interface"
+import { loadStripe } from "@stripe/stripe-js"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -35,6 +37,7 @@ const Order = () => {
     streetNumber: "",
   })
   const [country, setCountry] = useState<ISelect>()
+  const [cartProducts, setCartProducts] = useState<Array<ICartProduct>>()
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -48,7 +51,7 @@ const Order = () => {
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version
@@ -124,7 +127,7 @@ const Order = () => {
   const addShippingDetailsToCart = async () => {
     startLoading()
     await axios
-      .post(`${API_URL}/product/addShippingAddress`, {
+      .post(`${API_URL}/receipts/addShippingAddress`, {
         cartId: cartId,
         version: cartVersion,
         firstName: orderData.firstName,
@@ -140,12 +143,12 @@ const Order = () => {
       .then((res) => {
         if (res?.status == 200) {
           if (res?.data?.success == true) {
-            navigate("/order-payment", {
-              state: {
-                cartTotal: cartTotal,
-                cartId: cartId,
-              },
-            })
+            // navigate("/order-payment", {
+            //   state: {
+            //     cartTotal: cartTotal,
+            //     cartId: cartId,
+            //   },
+            // })
           }
         }
         if (res?.data?.error) {
@@ -174,12 +177,71 @@ const Order = () => {
     return error
   }
 
+  const getCartByCartId = async (cartId: string) => {
+    startLoading()
+    let cartProducts: Array<ICartProduct> | null
+    await axios
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
+      .then((res) => {
+        if (res?.data?.products.length > 0) {
+          cartProducts = res?.data?.products
+        } else {
+          cartProducts = null
+        }
+      })
+      .catch((err) => {
+        console.log("ERROR -> ", err)
+        cartProducts = null
+      })
+      .finally(() => {
+        stopLoading()
+      })
+    return cartProducts
+  }
+
+  const makePayment = async (cartProducts: Array<ICartProduct>) => {
+    startLoading()
+    const stripe = await loadStripe(
+      "pk_test_51OaaSWJBVMfA4T8SROWZEc1uKiO6OsN0Yxf0tguDPCyEcBj6SNQ5NwNJ9tiwbxDRJ8IbVzFojxEGRp4k9io7UNev00B2BPGOBj"
+    )
+
+    const body = {
+      products: cartProducts,
+    }
+    const headers = {
+      "Content-Type": "application/json",
+    }
+    const response = await fetch(`${API_URL}/receipts/createCheckoutSession`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    })
+    const session = await response.json()
+
+    if (session.id != null) {
+      const result = stripe.redirectToCheckout({
+        sessionId: session.id,
+      })
+    } else {
+      toast.error("Error. Please try again later.")
+    }
+    stopLoading()
+  }
+
+  const startPaymentProcess = async () => {
+    const cartProducts = await getCartByCartId(cartId)
+    if (cartProducts != null && cartProducts.length > 0) {
+      makePayment(cartProducts)
+    }
+  }
+
   const handleGoToNextStep = () => {
     const verifyError = verifyShippingDetails()
     if (verifyError === true) {
       toast("Please enter all shipping details.")
     } else {
       addShippingDetailsToCart()
+      startPaymentProcess()
     }
   }
 
@@ -228,7 +290,7 @@ const Order = () => {
       <p className="text-center text-[36px] font-semibold pt-8">
         Shipping Details
       </p>
-      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+      <div className="flex flex-col gap-2 justify-center items-center md:px-[20%] lg:px-[20%]">
         {/* <p>{cartId}</p>
         <p>{cartTotal}</p>
         <hr /> */}

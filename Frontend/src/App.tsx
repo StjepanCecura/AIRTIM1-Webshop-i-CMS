@@ -14,6 +14,8 @@ import ShoppingCart from "./pages/ShoppingCart"
 import Order from "./pages/Order"
 import OrderPayment from "./pages/OrderPayment"
 import CustomerSupport from "./pages/CustomerSupport"
+import PaymentSuccess from "./pages/PaymentSuccess"
+import PaymentCancel from "./pages/PaymentCancel"
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
             element={<EmailVerification />}
           />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
         </Routes>
         <ToastContainer
           position="top-right"

@@ -23,7 +23,7 @@ const OrderPayment = () => {
     expireDate: "",
     cvv: "",
   })
-  const { setCardContextState } = useContext(CartContext)
+  const { setCartContextState } = useContext(CartContext)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -46,7 +46,7 @@ const OrderPayment = () => {
   const makeOrder = async (_cartVersion: number) => {
     startLoading()
     let success = await axios
-      .post(`${API_URL}/product/createOrder`, {
+      .post(`${API_URL}/receipts/createOrder`, {
         cartId: cartId,
         version: _cartVersion,
       })
@@ -77,7 +77,7 @@ const OrderPayment = () => {
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version
@@ -98,7 +98,7 @@ const OrderPayment = () => {
   const handleFinishOrder = async () => {
     const _cartVersion = await getCartVersionByCartId()
     const orderSuccess = await makeOrder(_cartVersion)
-    orderSuccess ? setCardContextState(false) : setCardContextState(true)
+    orderSuccess ? setCartContextState(false) : setCartContextState(true)
     const loginStatus = getLoginStatus()
     if (loginStatus != "true") {
       removeShoppingCartId()
