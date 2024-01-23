@@ -166,6 +166,21 @@ const Profile = () => {
       })
   }
 
+  const signOut = async () => {
+    startLoading()
+    await axios
+      .get(`${API_URL}/customer/sign-out`)
+      .then((res) => {})
+      .catch((err) => {
+        if (err?.response?.status != 403) {
+          toast.error("Error signing out. Please try again later.")
+        }
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const deleteAccount = async () => {
     startLoading()
     await axios
@@ -176,6 +191,7 @@ const Profile = () => {
             toast("Account deleted successfully.")
             setOpenModal(false)
             setLoginStatus(false)
+            signOut()
             navigate("/")
           } else {
             toast.error("Error while deleting account. Please try again later.")
