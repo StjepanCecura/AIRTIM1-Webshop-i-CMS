@@ -16,12 +16,14 @@ import LogoPNG from "../assets/air-express-logo.png"
 import { CartContext } from "../services/CartContext"
 import { useContext } from "react"
 import { getShoppingCart } from "../services/lsShoppingCart"
+import SupportSVG from "../assets/support.svg"
 interface Props {
   loginStatus: string
   handleSignOutClick: () => void
   handleProfileClick: () => void
   handleSignInClick: () => void
   handleCartClick: () => void
+  handleSupportClick: () => void
   routes: any
   cartExists: boolean
 }
@@ -32,6 +34,7 @@ const NavbarDesktop = ({
   handleProfileClick,
   handleSignInClick,
   handleCartClick,
+  handleSupportClick,
   routes,
   cartExists,
 }: Props) => {
@@ -53,6 +56,13 @@ const NavbarDesktop = ({
         })}
       </div>
       <div className="flex flex-row items-center gap-6">
+        {loginStatus ? (
+          <img
+            src={SupportSVG}
+            className="h-7 hover:cursor-pointer"
+            onClick={handleSupportClick}
+          />
+        ) : null}
         {cartExists ? (
           <img
             src={CartActiveSVG}
@@ -98,6 +108,7 @@ const NavbarMobile = ({
   handleProfileClick,
   handleSignInClick,
   handleCartClick,
+  handleSupportClick,
   routes,
   cartExists,
 }: Props) => {
@@ -116,6 +127,13 @@ const NavbarMobile = ({
           </Link>
         </div>
         <div className="flex flex-row gap-6 items-center">
+          {loginStatus ? (
+            <img
+              src={SupportSVG}
+              className="h-7 hover:cursor-pointer"
+              onClick={handleSupportClick}
+            />
+          ) : null}
           {cartExists ? (
             <img
               src={CartActiveSVG}
@@ -207,7 +225,7 @@ const Navbar = () => {
       .get(`${API_URL}/customer/sign-out`)
       .then((res) => {})
       .catch((err) => {
-        if (err?.response.status != 403) {
+        if (err?.response?.status != 403) {
           toast.error("Error signing out. Please try again later.")
         }
       })
@@ -227,6 +245,10 @@ const Navbar = () => {
 
   const handleCartClick = () => {
     navigate("/shopping-cart")
+  }
+
+  const handleSupportClick = () => {
+    navigate("/customer-support")
   }
 
   const getNavigationEntries = async () => {
@@ -255,7 +277,7 @@ const Navbar = () => {
 
   const getCartByCartId = async (cartId: string) => {
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if (res?.data?.products.length > 0) {
           setCartExists(true)
@@ -272,7 +294,7 @@ const Navbar = () => {
   const getCartIdByUser = async () => {
     let id: string | null
     await axios
-      .get(`${API_URL}/product/getCartByCustomerId`)
+      .get(`${API_URL}/receipts/getCartByCustomerId`)
       .then((res) => {
         id = res?.data?.cartId
       })
@@ -329,6 +351,7 @@ const Navbar = () => {
     <>
       <NavbarDesktop
         loginStatus={loginStatus}
+        handleSupportClick={handleSupportClick}
         handleProfileClick={handleProfileClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
@@ -339,6 +362,7 @@ const Navbar = () => {
       <NavbarMobile
         loginStatus={loginStatus}
         handleProfileClick={handleProfileClick}
+        handleSupportClick={handleSupportClick}
         handleSignOutClick={handleSignOutClick}
         handleSignInClick={handleSignInClick}
         handleCartClick={handleCartClick}

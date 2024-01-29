@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 const ProductCard = ({ productData }: { productData: IProduct }) => {
   const navigate = useNavigate()
   const handleProductClick = () => {
-    navigate(`/p/${productData.productKey}/${productData.variantKey}`)
+    navigate(`/p/${productData?.productKey}/${productData?.variantKey}`)
   }
   return (
     <div
@@ -12,22 +12,22 @@ const ProductCard = ({ productData }: { productData: IProduct }) => {
       className=" flex flex-col justify-center items-center bg-white hover:bg-slate-200 hover:cursor-pointer hover:border-primary hover:border-2 border-2 border-white rounded-lg"
     >
       <div className="h-[300px] flex justify-center items-center">
-        <img className="max-h-[300px]" src={productData.images[0].url} />
+        <img className="max-h-[300px]" src={productData?.images[0]?.url} />
       </div>
       <div className="flex flex-col justify-center items-center pb-4">
-        <p className="text-[18px] text-center mb-2">{productData.name}</p>
+        <p className="text-[18px] text-center mb-2">{productData?.name}</p>
         <div className="flex flex-row gap-4">
-          {productData.discountPrice ? (
+          {productData?.discountPrice ? (
             <>
               <p className="text-black text-[18px] line-through">
-                {productData.regularPrice
+                {productData?.regularPrice
                   .toFixed(2)
                   .toString()
                   .replace(".", ",")}{" "}
                 €
               </p>
               <p className="text-primary font-semibold text-[20px]">
-                {productData.discountPrice
+                {productData?.discountPrice
                   .toFixed(2)
                   .toString()
                   .replace(".", ",")}{" "}
@@ -36,7 +36,10 @@ const ProductCard = ({ productData }: { productData: IProduct }) => {
             </>
           ) : (
             <p className="text-primary font-semibold text-[20px]">
-              {productData.regularPrice.toFixed(2).toString().replace(".", ",")}{" "}
+              {productData?.regularPrice
+                .toFixed(2)
+                .toString()
+                .replace(".", ",")}{" "}
               €
             </p>
           )}

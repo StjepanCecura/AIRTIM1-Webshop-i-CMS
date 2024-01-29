@@ -52,7 +52,7 @@ const CartProduct = ({
     startLoading()
     let version: number | null
     await axios
-      .get(`${API_URL}/product/getCartById?cartId=${cartId}`)
+      .get(`${API_URL}/receipts/getCartById?cartId=${cartId}`)
       .then((res) => {
         if ((res?.data?.version ?? "") != "") {
           version = res?.data?.version
@@ -79,7 +79,7 @@ const CartProduct = ({
   ) => {
     startLoadingQuantity()
     await axios
-      .post(`${API_URL}/product/addProductToCart`, {
+      .post(`${API_URL}/receipts/addProductToCart`, {
         cartId: cartId,
         version: cartVersion,
         productId: productId,
@@ -116,7 +116,7 @@ const CartProduct = ({
       startLoadingQuantity()
       const cartVersion = await getCartVersionByCartId(cartId)
       await axios
-        .post(`${API_URL}/product/removeProductFromCart`, {
+        .post(`${API_URL}/receipts/removeProductFromCart`, {
           cartId: cartId,
           lineItemId: productData.lineItemId,
           version: cartVersion,
@@ -170,7 +170,7 @@ const CartProduct = ({
     startLoading()
     const cartVersion = await getCartVersionByCartId(cartId)
     await axios
-      .post(`${API_URL}/product/removeProductFromCart`, {
+      .post(`${API_URL}/receipts/removeProductFromCart`, {
         cartId: cartId,
         lineItemId: productData.lineItemId,
         version: cartVersion,

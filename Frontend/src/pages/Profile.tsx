@@ -9,6 +9,8 @@ import { toast } from "react-toastify"
 import SelectList from "../components/SelectList"
 import { ISelect } from "../interfaces/select.interface"
 import Input from "../components/Input"
+import { Modal } from "flowbite-react"
+import { setLoginStatus } from "../services/lsLoginStatus"
 
 const countries = [{ value: "HR", label: "Croatia" }]
 
@@ -30,6 +32,7 @@ const Profile = () => {
   })
   const [country, setCountry] = useState<ISelect>()
   const [userHasAddress, setUserHasAddress] = useState(false)
+  const [openModal, setOpenModal] = useState(false)
 
   const startLoading = () => {
     setLoadingStack((prev) => [...prev, 1])
@@ -83,16 +86,11 @@ const Profile = () => {
         }
       })
       .catch((err) => {
+        console.log("ERR -> ", err)
         if (err?.response?.status != 403) {
           toast.error("Error loading profile. Please try again later.")
           navigate("/")
         }
-        // if (err?.response.status == 403) {
-        //   navigate("/login")
-        // } else {
-        //   toast.error("Error loading profile. Please try again later.")
-        //   navigate("/login")
-        // }
       })
       .finally(() => {
         stopLoading()
@@ -168,12 +166,59 @@ const Profile = () => {
       })
   }
 
+  const signOut = async () => {
+    startLoading()
+    await axios
+      .get(`${API_URL}/customer/sign-out`)
+      .then((res) => {})
+      .catch((err) => {
+        if (err?.response?.status != 403) {
+          toast.error("Error signing out. Please try again later.")
+        }
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
+  const deleteAccount = async () => {
+    startLoading()
+    await axios
+      .delete(`${API_URL}/customer/deleteAccount`)
+      .then((res) => {
+        if (res?.status == 200) {
+          if (res?.data?.success == true) {
+            toast("Account deleted successfully.")
+            setOpenModal(false)
+            setLoginStatus(false)
+            signOut()
+            navigate("/")
+          } else {
+            toast.error("Error while deleting account. Please try again later.")
+          }
+        }
+        if (res?.data?.error) {
+          toast.error("Error while deleting account. Please try again later.")
+        }
+      })
+      .catch((err) => {
+        toast.error("Error while deleting account. Please try again later.")
+      })
+      .finally(() => {
+        stopLoading()
+      })
+  }
+
   const handleSaveChangesClick = () => {
     if (userHasAddress) {
       updateCustomerData()
     } else {
       addCustomerData()
     }
+  }
+
+  const handleDeleteAccountClick = () => {
+    setOpenModal(true)
   }
 
   useEffect(() => {
@@ -209,7 +254,7 @@ const Profile = () => {
   return (
     <div className="flex flex-col px-8 gap-8 mb-8">
       <p className="text-center text-[36px] font-semibold pt-8">Profile</p>
-      <div className="flex flex-col gap-2 justify-center items-center md:px-96">
+      <div className="flex flex-col gap-2 justify-center items-center md:px-[20%] lg:px-[20%]">
         <div className="flex flex-col gap-2 w-full">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="flex flex-col justify-start w-full">
@@ -299,15 +344,41 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center w-full mt-8">
-          <div className="w-[500px]">
+        <div className="flex-col justify-center items-center mt-8 w-full">
+          <div className="w-full">
             <Button
               text="Save changes"
               onClick={() => handleSaveChangesClick()}
             />
           </div>
+          <div className="w-full mt-8">
+            <Button
+              danger
+              text="Delete account"
+              onClick={() => handleDeleteAccountClick()}
+            />
+          </div>
         </div>
       </div>
+      <Modal
+        show={openModal}
+        size="md"
+        onClose={() => setOpenModal(false)}
+        popup
+      >
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button danger text="Yes" onClick={() => deleteAccount()} />
+              <Button text="No" onClick={() => setOpenModal(false)} />
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   )
 }

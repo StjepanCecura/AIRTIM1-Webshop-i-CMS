@@ -13,6 +13,9 @@ import Product from "./pages/Product"
 import ShoppingCart from "./pages/ShoppingCart"
 import Order from "./pages/Order"
 import OrderPayment from "./pages/OrderPayment"
+import CustomerSupport from "./pages/CustomerSupport"
+import PaymentSuccess from "./pages/PaymentSuccess"
+import PaymentCancel from "./pages/PaymentCancel"
 
 function App() {
   return (
@@ -31,11 +34,14 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/order" element={<Order />} />
           <Route path="/order-payment" element={<OrderPayment />} />
+          <Route path="/customer-support" element={<CustomerSupport />} />
           <Route
             path="/email-verification/:id"
             element={<EmailVerification />}
           />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
         </Routes>
         <ToastContainer
           position="top-right"
